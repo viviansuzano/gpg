@@ -1,0 +1,26 @@
+<launch>
+
+  <!-- Configurations (can also be set as argument) -->
+  <arg name="rvizconfig"  default="$(find gpg_description)/rviz/urdf.rviz" />
+  <arg name="imu" default="false"/>
+  <arg name="distance" default="false"/>
+  <arg name="lds" default="false"/>
+  
+  <!-- Load robot description -->
+  <include file="$(find gpg_description)/launch/load.launch">
+    <arg name="imu" value="$(arg imu)"/>
+    <arg name="distance" value="$(arg distance)"/>
+    <arg name="lds" value="$(arg lds)"/>
+  </include>
+  
+  <!-- Open joint_state_publisher with GUI for debugging -->
+  <param name="use_gui" value="true"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  
+  <!-- Publish robot state (joints) as TF -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  
+  <!-- Open Rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+  
+</launch>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>gpg_gazebo</name>
+  <version>0.1.0</version>
+  <description>The gpg_gazebo package</description>
+
+  <maintainer email="labrob@todo.todo">labrob</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>gazebo_ros</build_depend>
+  <exec_depend>gpg_description</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>gpg_control</exec_depend>
+
+</package>

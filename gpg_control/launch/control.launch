@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Arguments -->
+  <arg name="rvizconfig" default="$(find gpg_control)/rviz/control.rviz" />
+  
+  <!-- Load controller configuration -->
+  <rosparam command="load" file="$(find gpg_control)/config/control.yaml" />
+  
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" />
+
+  <!-- Spawn controllers -->
+  <node name="gpg_controller_spawner" pkg="controller_manager" type="spawner"
+        args="gpg_joint_publisher gpg_camera_controller gpg_velocity_controller"/>
+
+  <node pkg="robot_state_publisher" type="robot_state_publisher"  name="robot_state_publisher">
+    <param name="publish_frequency" type="double" value="30.0" />
+  </node>
+
+  <!-- GUI plugin for steering a robot using Twist messages -->
+  <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+    <param name="default_topic" value="/gpg_velocity_controller/cmd_vel"/>
+  </node>
+
+</launch>

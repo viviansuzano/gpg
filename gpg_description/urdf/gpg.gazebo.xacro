@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<robot name="gpg3_sim" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Base_link -->
+  <gazebo reference="base_link_cad">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+
+  <!-- Left wheel mechanical properties -->
+  <gazebo reference="wheel_left_link">
+    <mu1>0.5</mu1>
+    <mu2>0.5</mu2>
+    <kp>500000.0</kp>
+    <kd>10.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.5</maxVel>
+    <fdir1>1 0 0</fdir1>
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+
+  <!-- This block connects the wheel joint to an actuator (motor), which informs both simulation and visualization of the robot -->
+  <transmission name="wheel_left_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="wheel_left_motor">
+	  <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="wheel_left_joint">
+	  <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Right wheel mechanical properties -->
+  <gazebo reference="wheel_right_link">
+    <mu1>0.5</mu1>
+    <mu2>0.5</mu2>
+    <kp>500000.0</kp>
+    <kd>10.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.5</maxVel>
+    <fdir1>1 0 0</fdir1>
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+
+  <transmission name="wheel_right_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="wheel_right_motor">
+	  <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="wheel_right_joint">
+	  <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Caster back mechanical properties -->
+  <gazebo reference="caster_back_link">
+    <mu1>0.001</mu1>
+    <mu2>0.001</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>10.0</maxVel>
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+
+  <!-- Rotating camera mechanical properties -->
+  <gazebo reference="camera_link">
+    <mu1>0.001</mu1>
+    <mu2>0.001</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>10.0</maxVel>
+    <material>Gazebo/Yellow</material>
+  </gazebo>
+
+  <transmission name="camera_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="camera_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="camera_joint">
+      <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+    </joint>
+  </transmission>
+
+  <!-- Gazebo plugin for ROS Control -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+    </plugin>
+  </gazebo>
+
+</robot>

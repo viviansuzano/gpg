@@ -1,0 +1,15 @@
+<launch>
+
+  <!-- Configurations -->
+  <arg name="imu" default="false"/>
+  <arg name="distance" default="false"/>
+  <arg name="lds" default="false"/>
+  
+  <!-- Run xacro script to generate and upload GoPiGo description -->  
+  <param name="robot_description" command="$(find xacro)/xacro
+    $(find gpg_description)/urdf/gpg.urdf.xacro
+    imu:=$(arg imu)
+    distance:=$(arg distance)
+    lds:=$(arg lds)"/>
+
+</launch>
