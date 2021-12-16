@@ -10,7 +10,7 @@
   <xacro:arg name="distance"   default="false"/>
   <xacro:arg name="lds"        default="false"/>
 
-<!-- ============ 'base_footprint' is the ground link ===================== -->
+  <!-- ============ 'base_footprint' is the ground link ===================== -->
   <link name="base_footprint"/>
 
   <joint name="base_joint" type="fixed">

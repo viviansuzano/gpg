@@ -1,5 +1,8 @@
 <?xml version="1.0"?>
 <robot name="gpg3_sim" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:arg name="laser_visual" default="false"/>
+  <xacro:arg name="imu_visual"   default="true"/>
+  <xacro:arg name="distance_visual" default="false"/>
 
   <!-- Base_link -->
   <gazebo reference="base_link_cad">
@@ -51,7 +54,7 @@
     </joint>
   </transmission>
 
-  <!-- Caster back mechanical properties -->
+  <!-- Caster mechanical properties -->
   <gazebo reference="caster_back_link">
     <mu1>0.001</mu1>
     <mu2>0.001</mu2>
@@ -82,6 +85,44 @@
       <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
     </joint>
   </transmission>
+
+  <!-- IMU sensor -->
+  <gazebo reference="imu_link">
+    <sensor type="imu" name="imu">
+      <always_on>true</always_on>
+      <visualize>$(arg imu_visual)</visualize>
+    </sensor>
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  <!-- IMU plugin -->
+  <gazebo>
+    <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+      <alwaysOn>true</alwaysOn>
+      <bodyName>imu_link</bodyName>
+      <frameName>imu_link</frameName>
+      <topicName>imu</topicName>
+      <serviceName>imu_service</serviceName>
+      <gaussianNoise>0.0</gaussianNoise>
+      <updateRate>200</updateRate>
+      <imu>
+        <noise>
+          <type>gaussian</type>
+          <rate>
+            <mean>0.0</mean>
+            <stddev>2e-4</stddev>
+            <bias_mean>0.0000075</bias_mean>
+            <bias_stddev>0.0000008</bias_stddev>
+          </rate>
+          <accel>
+            <mean>0.0</mean>
+            <stddev>1.7e-2</stddev>
+            <bias_mean>0.1</bias_mean>
+            <bias_stddev>0.001</bias_stddev>
+          </accel>
+        </noise>
+      </imu>
+    </plugin>
+  </gazebo>
 
   <!-- Gazebo plugin for ROS Control -->
   <gazebo>

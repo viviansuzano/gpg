@@ -6,6 +6,11 @@
   <arg name="gui" default="true"/>
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
+  
+  <!-- Robot description arguments -->
+  <arg name="imu" default="true"/>
+  <arg name="distance" default="false"/>
+  <arg name="lds" default="false"/>
 
   <!-- Robot parameters -->
   <arg name="robot_model_name" default="gpg3"/>
@@ -28,7 +33,11 @@
   </include>
 
   <!-- Load robot description for gazebo -->
-  <include file="$(find gpg_description)/launch/load.launch"></include>
+  <include file="$(find gpg_description)/launch/load.launch">
+    <arg name="imu" value="$(arg imu)"/>
+    <arg name="distance" value="$(arg distance)"/>
+    <arg name="lds" value="$(arg lds)"/>
+  </include>
 
   <!-- Spawn robot in Gazebo -->
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
