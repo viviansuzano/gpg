@@ -213,7 +213,7 @@
 
   <!-- (JOINTS) Pi Camera -->
     <joint name="camera_joint" type="revolute">
-      <origin xyz="0.04 0 0.04" rpy="0 0 0"/>
+      <origin xyz="0.065 0 0.0" rpy="0 0 0"/>
       <parent link="base_link"/>
       <child link="camera_link"/>
       <axis xyz="0 0 1"/>
@@ -280,7 +280,7 @@
     <joint name="scan_joint" type="fixed">
       <parent link="base_link"/>
       <child link="base_scan"/>
-      <origin xyz="-0.02 0 0.085" rpy="0 0 -1.57"/>
+      <origin xyz="-0.02 0 0.085" rpy="0 0 0"/>
       <!--LDS** origin xyz="-0.02 0 0.07" rpy="0 0 -1.6"/-->
     </joint>
 

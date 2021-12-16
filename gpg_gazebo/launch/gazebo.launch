@@ -6,11 +6,16 @@
   <arg name="gui" default="true"/>
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
-  
+
+  <!-- World file -->
+  <!-- <arg name="world" default="empty"/> -->
+  <arg name="world" default="singlePillar"/>
+  <arg name="world_file" default="$(find gpg_gazebo)/worlds/$(arg world).world"/>
+
   <!-- Robot description arguments -->
   <arg name="imu" default="true"/>
   <arg name="distance" default="false"/>
-  <arg name="lds" default="false"/>
+  <arg name="lds" default="true"/>
 
   <!-- Robot parameters -->
   <arg name="robot_model_name" default="gpg3"/>
@@ -26,6 +31,7 @@
   <!-- Load Gazebo world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="debug" value="$(arg debug)" />
+	<arg name="world_name" value="$(arg world_file)"/>
     <arg name="gui" value="$(arg gui)" />
     <arg name="paused" value="$(arg paused)"/>
     <arg name="use_sim_time" value="$(arg use_sim_time)"/>
