@@ -51,6 +51,7 @@
       -y $(arg y) -z $(arg z) -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"
     output="screen"/>
 
+  <!-- Spawn the controllers in Gazebo -->
   <include file="$(find gpg_control)/launch/control.launch"></include>
 
 </launch>
