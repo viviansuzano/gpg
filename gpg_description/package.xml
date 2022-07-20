@@ -3,8 +3,8 @@
   <name>gpg_description</name>
   <version>0.0.0</version>
   <description>
-    The gpg_description package with two options: URDF manually defined or UDF from CAD.
-	The CAD files is based on: https://github.com/ros-gopigo3/gopigo3
+    The gpg_description package with two options: URDF manually defined or URDF from CAD.
+    The CAD and URDF files are based on: https://github.com/ros-gopigo3/gopigo3
   </description>
 
   <maintainer email="labrob@todo.todo">labrob</maintainer>
