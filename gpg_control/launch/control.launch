@@ -2,11 +2,13 @@
 <launch>
 
   <!-- Arguments -->
+  <arg name="use_rqt_steering" default="true" />
   <arg name="rvizconfig" default="$(find gpg_control)/rviz/control.rviz" />
   
   <!-- Load controller configuration -->
   <rosparam command="load" file="$(find gpg_control)/config/control.yaml" />
   
+  <!-- RViz -->
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" />
 
   <!-- Spawn controllers -->
@@ -17,9 +19,15 @@
     <param name="publish_frequency" type="double" value="30.0" />
   </node>
 
-  <!-- GUI plugin for steering a robot using Twist messages -->
-  <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
-    <param name="default_topic" value="/gpg_velocity_controller/cmd_vel"/>
-  </node>
+  <!-- Velocity goals: GUI plugin or gpg_planning -->
+	<group if="$(arg use_rqt_steering)">
+	  <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+    	<param name="default_topic" value="/gpg_velocity_controller/cmd_vel"/>
+  	</node>
+	</group>
+
+	<group unless="$(arg use_rqt_steering)">
+		<node pkg="gpg_planning" type="gpg_goal_publisher" name="gpg_goal_publisher" output="screen" />
+	</group>
 
 </launch>

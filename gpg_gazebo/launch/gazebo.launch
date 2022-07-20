@@ -3,7 +3,7 @@
   <!-- Gazebo arguments -->
   <arg name="paused" default="false"/>
   <arg name="use_sim_time" default="true"/>
-  <arg name="gui" default="true"/>
+  <arg name="gui" default="false"/>
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
 
@@ -19,6 +19,9 @@
 
   <!-- Robot parameters -->
   <arg name="robot_model_name" default="gpg3"/>
+
+	<!-- Execution arguments -->
+	<arg name="use_rqt_steering" default="true" />
 
   <!-- Set the initial pose of the robot's main body -->
   <arg name="x"                                     default="0.0"/>
@@ -52,6 +55,8 @@
     output="screen"/>
 
   <!-- Spawn the controllers in Gazebo -->
-  <include file="$(find gpg_control)/launch/control.launch"></include>
+  <include file="$(find gpg_control)/launch/control.launch">
+		<arg name="use_rqt_steering" value="$(arg use_rqt_steering)"/>
+	</include>
 
 </launch>

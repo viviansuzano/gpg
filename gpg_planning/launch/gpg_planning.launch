@@ -1,0 +1,6 @@
+<launch>
+
+  <!-- Velocity goal publisher -->
+	<node pkg="gpg_planning" type="gpg_goal_publisher" name="gpg_goal_publisher" output="screen" />
+
+</launch>

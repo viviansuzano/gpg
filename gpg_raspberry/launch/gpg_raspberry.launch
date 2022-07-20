@@ -1,0 +1,35 @@
+<launch>
+
+  <!-- Robot description arguments -->
+  <arg name="imu" default="false"/>
+  <arg name="distance" default="false"/>
+  <arg name="lds" default="false"/>
+
+  <!-- Load robot description -->
+  <include file="$(find gpg_description)/launch/load.launch">
+    <arg name="imu" value="$(arg imu)"/>
+    <arg name="distance" value="$(arg distance)"/>
+    <arg name="lds" value="$(arg lds)"/>
+  </include>
+
+  <!-- Load gpg_fake node -->
+  <node pkg="gpg_fake" type="gpg_fake_node" name="gpg_fake_node" output="screen" />
+
+  <!-- Publish joint values to TF -->
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" output="screen">
+    <param name="publish_frequency" type="double" value="50.0" />
+  </node>
+
+  <!-- RViz -->
+  <arg name="rviz" default="true"/>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find gpg_fake)/rviz/gpg_fake.rviz"/>
+
+  <!-- Velocity goal publisher -->
+  <node pkg="gpg_fake" type="gpg_goal_publisher" name="gpg_goal_publisher" output="screen" />
+
+  <!-- GUI plugin for steering a robot using Twist messages -->
+  <!-- <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
+    <param name="default_topic" value="/gpg_velocity_controller/cmd_vel"/>
+  </node> -->
+
+</launch>
