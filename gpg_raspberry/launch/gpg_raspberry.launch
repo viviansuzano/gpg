@@ -1,6 +1,6 @@
 <launch>
 
   <!-- LED switching (for RaspberryPi tests) -->
-	<node pkg="gpg_raspberry" type="gpg_led_switch" name="gpg_led_switch" output="screen" if="$(arg raspberry)"/>
+	<node pkg="gpg_raspberry" type="gpg_led_switch" name="gpg_led_switch" output="screen"/>
 
 </launch>
