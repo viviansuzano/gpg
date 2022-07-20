@@ -1,5 +1,10 @@
 #include <ros/ros.h>
 
+#include <iostream>
+#include <wiringPi.h>
+
+#define LED_PIN 0
+
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "gpg_led_switch");
