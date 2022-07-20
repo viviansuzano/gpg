@@ -25,7 +25,7 @@
 
   <!-- RViz -->
   <arg name="rviz" default="true"/>
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find gpg_fake)/rviz/gpg_fake.rviz"/>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find gpg_fake)/rviz/gpg_fake.rviz" if="$(arg rviz)"/>
 
   <!-- Velocity goal publisher -->
   <node pkg="gpg_planning" type="gpg_goal_publisher" name="gpg_goal_publisher" output="screen" />
