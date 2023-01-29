@@ -16,7 +16,7 @@ gpg_velocity_controller:
 
   # Publishes TF odom->base_frame_id based on the wheels' encoders
   # (set to false if using robot_localization) 
-  enable_odom_tf: true
+  enable_odom_tf: false
 
   # Velocity and acceleration limits
   # Whenever a min_* is unspecified, default to -max_*

@@ -1,0 +1,9 @@
+<launch>
+
+  <!-- Visualization for filters -->
+  <node pkg="grid_map_visualization" type="grid_map_visualization" name="grid_map_visualization_filter" output="screen">
+    <param name="grid_map_topic" value="/grid_map_filter/filtered_map" />
+    <rosparam command="load" file="$(find gpg_elevation_mapping)/config/visualization/filters.yaml" />
+  </node>
+
+</launch>

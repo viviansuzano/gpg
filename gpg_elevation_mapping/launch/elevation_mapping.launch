@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+
+  <!-- Enable filters -->
+  <arg name="enable_filters" default="true"/>
+
+  <env name="ROSCONSOLE_CONFIG_FILE" value="$(find gpg_elevation_mapping)/config/rosconsole.conf"/>
+
+  <!-- Launch elevation mapping node -->
+  <!-- Elevation mapping node -->
+  <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping" output="screen">
+    <rosparam command="load" file="$(find gpg_elevation_mapping)/config/simple_robot.yaml" />
+    <rosparam command="load" file="$(find gpg_elevation_mapping)/config/postprocessing/postprocessor_pipeline.yaml" />
+  </node>
+
+  <!-- Grid map filters -->
+	<group if="$(arg enable_filters)">
+		<include file="$(find gpg_elevation_mapping)/launch/grid_map_filters.launch"/>
+    <include file="$(find gpg_elevation_mapping)/launch/visualization_filters.launch" />
+	</group>
+	
+	<group unless="$(arg enable_filters)">
+		<include file="$(find gpg_elevation_mapping)/launch/visualization_fused_raw.launch" />
+	</group>
+
+</launch>

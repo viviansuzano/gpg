@@ -3,13 +3,15 @@
   <!-- Configurations -->
   <arg name="imu" default="false"/>
   <arg name="distance" default="false"/>
-  <arg name="lds" default="false"/>
+  <arg name="laser" default="false"/>
+  <arg name="d435" default="false"/>
   
   <!-- Run xacro script to generate and upload GoPiGo description -->  
   <param name="robot_description" command="$(find xacro)/xacro
     $(find gpg_description)/urdf/gpg.urdf.xacro
     imu:=$(arg imu)
     distance:=$(arg distance)
-    lds:=$(arg lds)"/>
+    laser:=$(arg laser)
+    d435:=$(arg d435)"/>
 
 </launch>
