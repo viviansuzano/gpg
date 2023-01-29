@@ -2,20 +2,21 @@
 
   <!-- Configurations (can also be set as argument) -->
   <arg name="rvizconfig"  default="$(find gpg_description)/rviz/urdf.rviz" />
-  <arg name="imu" default="false"/>
+  <arg name="imu" default="true"/>
   <arg name="distance" default="false"/>
-  <arg name="lds" default="false"/>
+  <arg name="laser" default="true"/>
+  <arg name="d435" default="true"/>
   
   <!-- Load robot description -->
   <include file="$(find gpg_description)/launch/load.launch">
     <arg name="imu" value="$(arg imu)"/>
     <arg name="distance" value="$(arg distance)"/>
-    <arg name="lds" value="$(arg lds)"/>
+    <arg name="laser" value="$(arg laser)"/>
+    <arg name="d435" value="$(arg d435)"/>
   </include>
   
   <!-- Open joint_state_publisher with GUI for debugging -->
-  <param name="use_gui" value="true"/>
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
   
   <!-- Publish robot state (joints) as TF -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />

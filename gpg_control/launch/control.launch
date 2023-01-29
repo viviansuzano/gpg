@@ -3,13 +3,9 @@
 
   <!-- Arguments -->
   <arg name="use_rqt_steering" default="true" />
-  <arg name="rvizconfig" default="$(find gpg_control)/rviz/control.rviz" />
   
   <!-- Load controller configuration -->
   <rosparam command="load" file="$(find gpg_control)/config/control.yaml" />
-  
-  <!-- RViz -->
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" />
 
   <!-- Spawn controllers -->
   <node name="gpg_controller_spawner" pkg="controller_manager" type="spawner"

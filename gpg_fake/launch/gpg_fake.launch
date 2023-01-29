@@ -3,13 +3,15 @@
   <!-- Robot description arguments -->
   <arg name="imu" default="false"/>
   <arg name="distance" default="false"/>
-  <arg name="lds" default="false"/>
+  <arg name="laser" default="false"/>
+  <arg name="d435" default="false"/>
 
   <!-- Load robot description -->
   <include file="$(find gpg_description)/launch/load.launch">
     <arg name="imu" value="$(arg imu)"/>
     <arg name="distance" value="$(arg distance)"/>
-    <arg name="lds" value="$(arg lds)"/>
+    <arg name="laser" value="$(arg laser)"/>
+    <arg name="d435" value="$(arg d435)"/>
   </include>
 
 	<!-- ROS benchmarking tests with Raspberry -->

@@ -2,15 +2,17 @@
 <robot name="gpg3" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find gpg_description)/urdf/common_properties.xacro"/>
   <xacro:include filename="$(find gpg_description)/urdf/gpg.gazebo.xacro"/>
+  	<xacro:include filename="$(find gpg_description)/urdf/d435/d435.urdf.xacro"/>
 
   <xacro:property name="CADscale" value="0.0012" />
 
   <!-- Which sensors to include -->
-  <xacro:arg name="imu"        default="false" />
+  <xacro:arg name="imu"        default="false"/>
+  <xacro:arg name="laser"      default="false"/>
+  <xacro:arg name="d435"       default="false"/>
   <xacro:arg name="distance"   default="false"/>
-  <xacro:arg name="lds"        default="false"/>
 
-  <!-- ============ 'base_footprint' is the ground link ===================== -->
+<!-- ============ 'base_footprint' is the ground link ===================== -->
   <link name="base_footprint"/>
 
   <joint name="base_joint" type="fixed">
@@ -20,7 +22,7 @@
     <origin xyz="0 0 0.075" rpy="0 0 0"/>
   </joint>
 
-  <!-- ============ 'base_link' simulates GoPiGo3 body mass and moment of inertia and act as the robot reference frame =================== -->
+<!-- ============ 'base_link' simulates GoPiGo3 body mass and moment of inertia and act as the robot reference frame =================== -->
   <link name="base_link">
   <!-- **** 'base_link' COLLISION & INERTIA **** -->
     <collision>
@@ -316,8 +318,16 @@
     </link>
   </xacro:macro>
   
-  <xacro:if value="$(arg lds)">
+  <xacro:if value="$(arg laser)">
     <xacro:lds_sensor/>
+  </xacro:if>
+  
+  
+<!-- ============ Realsense Camera d435 ======================== -->
+	<xacro:if value="$(arg d435)">
+		<xacro:sensor_d435 name="d435" topics_ns="d435" parent="base_link" use_nominal_extrinsics="true" simulation="true">
+		  <origin xyz="0.056 0.0 0.06" rpy="0 0 0"/>
+		</xacro:sensor_d435>
   </xacro:if>
 
 </robot>

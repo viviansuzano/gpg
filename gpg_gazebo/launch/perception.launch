@@ -1,0 +1,77 @@
+<launch>
+
+  <!-- Gazebo arguments -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="false"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+
+  <!-- World file -->
+  <!-- <arg name="world" default="empty"/> -->
+  <arg name="world" default="objects"/>
+  <arg name="world_file" default="$(find gpg_gazebo)/worlds/$(arg world).world"/>
+
+  <!-- Robot description arguments -->
+  <arg name="imu" default="true"/>
+  <arg name="distance" default="false"/>
+  <arg name="laser" default="false"/>
+  <arg name="d435" default="true"/>
+
+  <!-- Robot parameters -->
+  <arg name="robot_model_name" default="gpg3"/>
+
+	<!-- Execution arguments -->
+	<arg name="use_rqt_steering" default="true" />
+
+  <!-- Set the initial pose of the robot's main body -->
+  <arg name="x"                                     default="0.0"/>
+  <arg name="y"                                     default="0.0"/>
+  <arg name="z"                                     default="0.1"/>
+  <arg name="roll"                                  default="0.0"/>
+  <arg name="pitch"                                 default="0.0"/>
+  <arg name="yaw"                                   default="0.0"/>
+
+  <!-- Load Gazebo world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="debug" value="$(arg debug)" />
+	  <arg name="world_name" value="$(arg world_file)"/>
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>
+  </include>
+
+  <!-- Load robot description for gazebo -->
+  <include file="$(find gpg_description)/launch/load.launch">
+    <arg name="imu" value="$(arg imu)"/>
+    <arg name="distance" value="$(arg distance)"/>
+    <arg name="laser" value="$(arg laser)"/>
+    <arg name="d435" value="$(arg d435)"/>
+  </include>
+
+  <!-- Spawn robot in Gazebo -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
+    args="-param robot_description -urdf -model $(arg robot_model_name) -x $(arg x)
+      -y $(arg y) -z $(arg z) -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"
+    output="screen"/>
+
+  <!-- Spawn the controllers in Gazebo -->
+  <include file="$(find gpg_control)/launch/control.launch">
+		<arg name="use_rqt_steering" value="$(arg use_rqt_steering)"/>
+	</include>
+	
+	<!-- Load elevation_mapping -->
+	<include file="$(find gpg_elevation_mapping)/launch/elevation_mapping.launch"></include>
+	
+	<!-- Ground truth -->
+	<node name="publish_robot_pose" pkg="gpg_localization" type="publish_robot_pose" output="screen"/>
+	
+	<!-- RViz -->
+	<arg name="rvizconfig" default="$(find gpg_elevation_mapping)/rviz/sim_map.rviz" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" />
+  
+  <!-- World frame for ground_truth plugin -->
+	<!--node pkg="tf" type="static_transform_publisher" name="world_to_map" args="0 0 0 0 0 0 world map 100" /-->
+
+</launch>
