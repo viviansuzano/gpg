@@ -9,7 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 catkin_package(
-  INCLUDE_DIRS include
+#  INCLUDE_DIRS include
   CATKIN_DEPENDS roscpp std_msgs sensor_msgs geometry_msgs
 )
 
@@ -17,7 +17,7 @@ catkin_package(
 # Build
 ################################################################################
 include_directories(
-  include
+#  include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -30,10 +30,6 @@ target_link_libraries(gpg_goal_publisher ${catkin_LIBRARIES})
 ################################################################################
 install(TARGETS gpg_goal_publisher
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )
 
 install(DIRECTORY launch
