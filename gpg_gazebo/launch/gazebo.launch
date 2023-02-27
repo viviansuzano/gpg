@@ -58,5 +58,12 @@
   <include file="$(find gpg_control)/launch/control.launch">
 		<arg name="use_rqt_steering" value="$(arg use_rqt_steering)"/>
 	</include>
+	
+	<!-- Load robot_localization (EKF) -->
+  <include file="$(find gpg_localization)/launch/gpg_localization.launch"/>
+  
+  <!-- Ground truth -->
+	<node pkg="tf" type="static_transform_publisher" name="world_to_odom_tf" args="0 0 0 0 0 0 world odom 10" />
+	<node name="publish_robot_pose" pkg="gpg_localization" type="publish_robot_pose" output="screen"/>
 
 </launch>
