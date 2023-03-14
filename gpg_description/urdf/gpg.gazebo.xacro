@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot name="gpg3_sim" xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:arg name="laser_visual" default="true"/> <!-- rays visible in gazebo -->
+  <xacro:arg name="laser_visual" default="false"/> <!-- rays visible in gazebo -->
   <xacro:arg name="imu_visual"   default="true"/>
   <xacro:arg name="distance_visual" default="false"/>
 
