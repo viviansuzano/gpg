@@ -1,5 +1,5 @@
 <launch>
-
+  
   <!-- Gazebo arguments -->
   <arg name="paused" default="false"/>
   <arg name="use_sim_time" default="true"/>
@@ -9,7 +9,7 @@
 
   <!-- World file -->
   <!-- <arg name="world" default="empty"/> -->
-  <arg name="world" default="singlePillar"/>
+  <arg name="world" default="cenario_teste"/>
   <arg name="world_file" default="$(find gpg_gazebo)/worlds/$(arg world).world"/>
 
   <!-- Robot description arguments -->
@@ -21,8 +21,8 @@
   <!-- Robot parameters -->
   <arg name="robot_model_name" default="gpg3"/>
 
-	<!-- Execution arguments -->
-	<arg name="use_rqt_steering" default="true" />
+  <!-- Execution arguments -->
+  <arg name="use_rqt_steering" default="true" />
 
   <!-- Set the initial pose of the robot's main body -->
   <arg name="x"                                     default="0.0"/>

@@ -18,6 +18,7 @@
         <falloff>0</falloff>
       </spot>
     </light>
+    
     <model name='ground_plane'>
       <static>1</static>
       <link name='link'>
@@ -66,6 +67,7 @@
         <kinematic>0</kinematic>
       </link>
     </model>
+    
     <gravity>0 0 -9.8</gravity>
     <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
     <atmosphere type='adiabatic'/>
@@ -79,6 +81,7 @@
       <background>0.7 0.7 0.7 1</background>
       <shadows>1</shadows>
     </scene>
+    
     <wind/>
     <spherical_coordinates>
       <surface_model>EARTH_WGS84</surface_model>
@@ -87,6 +90,7 @@
       <elevation>0</elevation>
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
+    
     <model name='Construction Cone'>
       <link name='link'>
         <collision name='collision'>
@@ -136,6 +140,7 @@
       </link>
       <pose>-0.030706 5.41185 0 0 -0 0</pose>
     </model>
+    
     <model name='cafe_table'>
       <static>1</static>
       <link name='link'>
@@ -215,6 +220,7 @@
       </link>
       <pose>2.55859 2.96754 0 0 -0 0</pose>
     </model>
+    
     <model name='coke_can'>
       <link name='link'>
         <inertial>
@@ -272,6 +278,7 @@
       </link>
       <pose>1.06753 3.52272 0 0 -0 0</pose>
     </model>
+    
     <state world_name='default'>
       <sim_time>89 56000000</sim_time>
       <real_time>90 121581087</real_time>
@@ -297,16 +304,21 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='coke_can'>
-        <pose>4.61997 -1.03795 -0.002748 -0.060409 0.004074 -0.000539</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose>4.61997 -1.03795 -0.002748 -0.060409 0.004074 -0.000539</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>-0.02416 -0.049377 -0.000773 0.860472 -0.423811 -0.03867</acceleration>
-          <wrench>-0.009422 -0.019257 -0.000302 0 -0 0</wrench>
-        </link>
+      
+      <model name='cone_1'>
+		<visual name='visual_cone'>
+		  <pose>0 0 0 0 0 0</pose>
+		  <scale>1 1 1</scale>
+		  <geometry>
+		    <mesh>
+		      <uri>/home/gabriel/grid_map_ws/src/gpg/gpg_gazebo/meshs/cone.dae</uri>
+		    </mesh>
+		  </geometry>
+		</visual>		
       </model>
+         
+
+
       <model name='ground_plane'>
         <pose>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>

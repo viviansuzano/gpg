@@ -1,0 +1,4 @@
+gazebo_ros_control/pid_gains:
+ wheel_left_joint: {p: 100.0, i: 0.01, d: 10.0}
+ wheel_right_joint: {p: 100.0, i: 0.01, d: 10.0}
+ camera_joint: {p: 100.0, i: 0.01, d: 10.0}
