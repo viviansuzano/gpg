@@ -1,0 +1,30 @@
+[33mcommit fb775227559f3b30b5d13565be7be4df3473d564[m[33m ([m[1;36mHEAD -> [m[1;32mdev/gabriel[m[33m, [m[1;31morigin/dev/gabriel[m[33m, [m[1;32mcenario[m[33m)[m
+Author: Gabriel Correa <gabrielcorrea@usp.br>
+Date:   Tue Oct 3 00:57:48 2023 -0300
+
+    Cenário padrão e adição dos ganhos PID
+
+[33mcommit 60e60533d70e84a4739279abd558cd8d9b6a3ab0[m
+Author: Gabriel Correa <gabrielcorrea@usp.br>
+Date:   Tue Feb 28 13:50:02 2023 -0300
+
+    CHange robot_name on gazebo.xacro. Add ner world files for tests in Gazebo.
+
+[33mcommit 7485e514c830fb7633f6072822015cb23b64ec26[m[33m ([m[1;31morigin/gpg_perception[m[33m, [m[1;32mgpg_perception[m[33m)[m
+Merge: 97a75e6 dc1c56a
+Author: Vivian Suzano Medeiros <viviansuzano@hotmail.com>
+Date:   Thu Feb 2 19:43:10 2023 -0300
+
+    Merge branch 'gpg_perception' of github.com:viviansuzano/gpg into gpg_perception
+
+[33mcommit 97a75e6ed0ab585dea2f8ec9630d773b812839f5[m
+Author: Vivian Suzano Medeiros <viviansuzano@hotmail.com>
+Date:   Sun Jan 29 00:27:47 2023 -0300
+
+    Add Realsense D435 camera to the URDF file. Add gpg_localization package, that publishes the robot ground truth pose. Add gpg_elevation_mapping package, fot grid_map filters.
+
+[33mcommit dc1c56a0c9dec6ea0eb214dca0dc5a318ecf08f5[m
+Author: Vivian Suzano Medeiros <viviansuzano@hotmail.com>
+Date:   Thu Feb 2 19:38:17 2023 -0300
+
+    Remove additional unused include folders.

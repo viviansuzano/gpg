@@ -1,5 +1,5 @@
 <launch>
-  
+
   <!-- Gazebo arguments -->
   <arg name="paused" default="false"/>
   <arg name="use_sim_time" default="true"/>
@@ -9,7 +9,7 @@
 
   <!-- World file -->
   <!-- <arg name="world" default="empty"/> -->
-  <arg name="world" default="cenario_teste"/>
+  <arg name="world" default="singlePillar"/>
   <arg name="world_file" default="$(find gpg_gazebo)/worlds/$(arg world).world"/>
 
   <!-- Robot description arguments -->
@@ -21,8 +21,8 @@
   <!-- Robot parameters -->
   <arg name="robot_model_name" default="gpg3"/>
 
-  <!-- Execution arguments -->
-  <arg name="use_rqt_steering" default="true" />
+	<!-- Execution arguments -->
+	<arg name="use_rqt_steering" default="true" />
 
   <!-- Set the initial pose of the robot's main body -->
   <arg name="x"                                     default="0.0"/>
@@ -61,11 +61,16 @@
 		<arg name="use_rqt_steering" value="$(arg use_rqt_steering)"/>
 	</include>
 	
+	<!-- Load robot_localization (EKF) -->
+  <include file="$(find gpg_localization)/launch/gpg_localization.launch"/>
+	
 	<!-- RViz -->
 	<arg name="rvizconfig" default="$(find gpg_control)/rviz/control.rviz" />
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" />
 
   <!-- World frame for ground_truth plugin -->
 	<node pkg="tf" type="static_transform_publisher" name="world_to_odom" args="0 0 0 0 0 0 world odom 10" />
+	<node name="publish_robot_pose" pkg="gpg_localization" type="publish_robot_pose" output="screen"/>
+
 	
 </launch>
