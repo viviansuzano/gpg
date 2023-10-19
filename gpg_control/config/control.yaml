@@ -36,3 +36,5 @@ gpg_velocity_controller:
 gpg_camera_controller:
   type: position_controllers/JointPositionController
   joint: camera_joint
+  
+

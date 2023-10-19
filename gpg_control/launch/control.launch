@@ -18,12 +18,15 @@
   <!-- Velocity goals: GUI plugin or gpg_planning -->
 	<group if="$(arg use_rqt_steering)">
 	  <node name="rqt_robot_steering" pkg="rqt_robot_steering" type="rqt_robot_steering">
-    	<param name="default_topic" value="/gpg_velocity_controller/cmd_vel"/>
-  	</node>
+		<param name="default_topic" value="/gpg_velocity_controller/cmd_vel"/>
+	</node>
 	</group>
 
 	<group unless="$(arg use_rqt_steering)">
 		<node pkg="gpg_planning" type="gpg_goal_publisher" name="gpg_goal_publisher" output="screen" />
 	</group>
+	
+  <!-- Load controller configuration -->
+  <rosparam command="load" file="$(find gpg_control)/config/gazebo_ros_control_params.yaml" />
 
 </launch>
