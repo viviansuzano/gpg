@@ -8,7 +8,6 @@
   <arg name="debug" default="false"/>
 
   <!-- World file -->
-  <!-- <arg name="world" default="empty"/> -->
   <arg name="world" default="singlePillar"/>
   <arg name="world_file" default="$(find gpg_gazebo)/worlds/$(arg world).world"/>
 
@@ -61,8 +60,8 @@
 		<arg name="use_rqt_steering" value="$(arg use_rqt_steering)"/>
 	</include>
 	
-	<!-- Load robot_localization (EKF) -->
-  <include file="$(find gpg_localization)/launch/gpg_localization.launch"/>
+	<!-- Load robot_localization (EKF) >
+  <include file="$(find gpg_localization)/launch/gpg_localization.launch"/-->
 	
 	<!-- RViz -->
 	<arg name="rvizconfig" default="$(find gpg_control)/rviz/control.rviz" />

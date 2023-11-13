@@ -326,7 +326,10 @@
 <!-- ============ Realsense Camera d435 ======================== -->
 	<xacro:if value="$(arg d435)">
 		<xacro:sensor_d435 name="d435" topics_ns="d435" parent="base_link" use_nominal_extrinsics="true" simulation="true">
-		  <origin xyz="0.056 0.0 0.06" rpy="0 0 0"/>
+		  <!--origin xyz="0.056 0.0 0.06" rpy="0 0 0"/-->
+		  <origin xyz="0.056 0.0 8.0" rpy="0 0.500 2.340"/>
+		  <!-- 0.7854 2.3562 -->
+		  <!-- 0.475 2.340 -->
 		</xacro:sensor_d435>
   </xacro:if>
 

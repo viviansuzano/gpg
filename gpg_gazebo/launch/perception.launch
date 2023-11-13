@@ -3,13 +3,12 @@
   <!-- Gazebo arguments -->
   <arg name="paused" default="false"/>
   <arg name="use_sim_time" default="true"/>
-  <arg name="gui" default="false"/>
+  <arg name="gui" default="true"/>
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
 
   <!-- World file -->
-  <!-- <arg name="world" default="empty"/> -->
-  <arg name="world" default="objects"/>
+  <arg name="world" default="cenario"/>
   <arg name="world_file" default="$(find gpg_gazebo)/worlds/$(arg world).world"/>
 
   <!-- Robot description arguments -->
@@ -25,8 +24,8 @@
 	<arg name="use_rqt_steering" default="true" />
 
   <!-- Set the initial pose of the robot's main body -->
-  <arg name="x"                                     default="0.0"/>
-  <arg name="y"                                     default="0.0"/>
+  <arg name="x"                                     default="13.5"/>
+  <arg name="y"                                     default="-13.5"/>
   <arg name="z"                                     default="0.1"/>
   <arg name="roll"                                  default="0.0"/>
   <arg name="pitch"                                 default="0.0"/>
@@ -62,7 +61,8 @@
 	</include>
 	
 	<!-- Load elevation_mapping -->
-	<include file="$(find gpg_elevation_mapping)/launch/elevation_mapping.launch"></include>
+	<include file="$(find gpg_elevation_mapping)/launch/elevation_mapping.launch">
+	</include>
 	
 	<!-- Ground truth -->
 	<node name="publish_robot_pose" pkg="gpg_localization" type="publish_robot_pose" output="screen"/>
