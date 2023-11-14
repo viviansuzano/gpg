@@ -8,7 +8,7 @@
   <arg name="debug" default="false"/>
 
   <!-- World file -->
-  <arg name="world" default="cenario"/>
+  <arg name="world" default="cenario_2"/>
   <arg name="world_file" default="$(find gpg_gazebo)/worlds/$(arg world).world"/>
 
   <!-- Robot description arguments -->
@@ -24,8 +24,8 @@
 	<arg name="use_rqt_steering" default="true" />
 
   <!-- Set the initial pose of the robot's main body -->
-  <arg name="x"                                     default="13.5"/>
-  <arg name="y"                                     default="-13.5"/>
+  <arg name="x"                                     default="3.35"/>
+  <arg name="y"                                     default="-3.55"/>
   <arg name="z"                                     default="0.1"/>
   <arg name="roll"                                  default="0.0"/>
   <arg name="pitch"                                 default="0.0"/>
