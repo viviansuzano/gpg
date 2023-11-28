@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="chao_aspero">
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <scale>0.4 0.4 0.4</scale>
+            <uri>model://chao_aspero/meshes/chao_aspero.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <scale>0.4 0.4 0.4</scale>
+            <uri>model://chao_aspero/meshes/chao_aspero.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>

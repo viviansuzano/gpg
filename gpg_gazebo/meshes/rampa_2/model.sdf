@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <model name="rampa_2">
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <scale>0.2 0.2 0.2</scale>
+            <uri>model://rampa_2/meshes/rampa_2.stl</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <scale>0.2 0.2 0.2</scale>
+            <uri>model://rampa_2/meshes/rampa_2.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>
