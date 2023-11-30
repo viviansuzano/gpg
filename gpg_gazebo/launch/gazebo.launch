@@ -6,6 +6,7 @@
   <arg name="gui" default="true"/>
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
+  <arg name="verbose" default="false"/>
 
   <!-- World file -->
   <arg name="world" default="singlePillar"/>
@@ -39,7 +40,8 @@
     <arg name="paused" value="$(arg paused)"/>
     <arg name="use_sim_time" value="$(arg use_sim_time)"/>
     <arg name="headless" value="$(arg headless)"/>
-  </include>
+    <arg name="verbose" value="$(arg verbose)"/>
+  </include>gaze	
 
   <!-- Load robot description for gazebo -->
   <include file="$(find gpg_description)/launch/load.launch">
