@@ -8,7 +8,7 @@
   <arg name="debug" default="false"/>
 
   <!-- World file -->
-  <arg name="world" default="cenario_2"/>
+  <arg name="world" default="cenario_3"/>
   <arg name="world_file" default="$(find gpg_gazebo)/worlds/$(arg world).world"/>
 
   <!-- Robot description arguments -->
@@ -61,7 +61,8 @@
 	</include>
 	
 	<!-- Load elevation_mapping -->
-	<!-- <include file="$(find gpg_elevation_mapping)/launch/elevation_mapping.launch"/> -->
+	<include file="$(find gpg_elevation_mapping)/launch/elevation_mapping.launch">
+  </include>
 	
 	<!-- Ground truth -->
 	<node name="publish_robot_pose" pkg="gpg_localization" type="publish_robot_pose" output="screen"/>
