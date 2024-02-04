@@ -1,0 +1,13 @@
+planner:
+  pose_topic: "/ground_truth"
+  cmd_topic: "/gpg_velocity_controller/cmd_vel"
+  map_topic: "/grid_map_filter/filtered_map"
+  foot_topic: "/foot_positions"
+  next_foot_topic: "/next_foot_positions"
+  base_to_hip_x: 0.1881
+  base_to_hip_y: 0.04675
+  robot_height: 0.4
+  t_stance: 2.0
+  k_velocity: 0.03
+  gravity: 9.81
+

@@ -1,0 +1,17 @@
+<launch>
+
+  <!-- Configurations -->
+  <arg name="imu" default="false"/>
+  <arg name="distance" default="false"/>
+  <arg name="laser" default="false"/>
+  <arg name="d435" default="false"/>
+  
+  <!-- Run xacro script to generate and upload Go1 description -->  
+  <param name="robot_description" command="$(find xacro)/xacro
+    $(find gpg_description)/urdf/go1.urdf.xacro
+    imu:=$(arg imu)
+    distance:=$(arg distance)
+    laser:=$(arg laser)
+    d435:=$(arg d435)"/>
+
+</launch>

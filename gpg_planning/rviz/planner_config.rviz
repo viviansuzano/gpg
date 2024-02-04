@@ -147,12 +147,50 @@ Visualization Manager:
       Value: true
       Visual Enabled: true
     - Class: rviz/TF
-      Enabled: false
+      Enabled: true
       Filter (blacklist): ""
       Filter (whitelist): ""
       Frame Timeout: 15
       Frames:
         All Enabled: false
+        base_footprint:
+          Value: true
+        base_link:
+          Value: true
+        base_link_cad:
+          Value: true
+        camera_link:
+          Value: true
+        caster_back_link:
+          Value: true
+        d435_bottom_screw_frame:
+          Value: true
+        d435_color_frame:
+          Value: true
+        d435_color_optical_frame:
+          Value: true
+        d435_depth_frame:
+          Value: true
+        d435_depth_optical_frame:
+          Value: true
+        d435_left_ir_frame:
+          Value: true
+        d435_left_ir_optical_frame:
+          Value: true
+        d435_link:
+          Value: true
+        d435_right_ir_frame:
+          Value: true
+        d435_right_ir_optical_frame:
+          Value: true
+        imu_link:
+          Value: true
+        wheel_left_link:
+          Value: true
+        wheel_right_link:
+          Value: true
+        world:
+          Value: true
       Marker Alpha: 1
       Marker Scale: 0.4000000059604645
       Name: TF
@@ -160,9 +198,37 @@ Visualization Manager:
       Show Axes: true
       Show Names: false
       Tree:
-        {}
+        world:
+          base_footprint:
+            base_link:
+              base_link_cad:
+                {}
+              camera_link:
+                {}
+              caster_back_link:
+                {}
+              d435_bottom_screw_frame:
+                d435_link:
+                  d435_depth_frame:
+                    d435_color_frame:
+                      d435_color_optical_frame:
+                        {}
+                    d435_depth_optical_frame:
+                      {}
+                    d435_left_ir_frame:
+                      d435_left_ir_optical_frame:
+                        {}
+                    d435_right_ir_frame:
+                      d435_right_ir_optical_frame:
+                        {}
+              imu_link:
+                {}
+              wheel_left_link:
+                {}
+              wheel_right_link:
+                {}
       Update Interval: 0
-      Value: false
+      Value: true
     - Class: rviz/Camera
       Enabled: true
       Image Rendering: background and overlay
@@ -434,7 +500,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.0775246620178223
+      Distance: 1.6719508171081543
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -442,17 +508,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.5856128931045532
-        Y: 1.0908803939819336
-        Z: -0.2913622558116913
+        X: 0.7284085154533386
+        Y: 1.1216322183609009
+        Z: 0.30866220593452454
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.3947974741458893
+      Pitch: 0.6347973942756653
       Target Frame: <Fixed Frame>
-      Yaw: 2.390306234359741
+      Yaw: 2.2403016090393066
     Saved: ~
 Window Geometry:
   Camera:
