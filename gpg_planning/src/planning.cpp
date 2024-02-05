@@ -61,17 +61,15 @@ poseCallback
     Calcular posição xy dos pés em relação ao world
 
 cmdCallback
-    Pegar velocidade do comando em relação ao world
+    Pegar velocidade de comando em relação ao world
     
 mapCallback
     Pegar elevação e traversability da posição xy dos pés
-
-updateFootMarkers
-    Publicar posição dos pés (x,y,elevação) para mostrar no RViz
+    updateFootMarkers: Publicar posição dos pés (x,y,elevação) para mostrar no RViz
 
 footCallback
     Calcular Raibert
-    Publicar próxima posição de cada pé para mostrar no RViz
+    updateNextFootMarkers: ublicar a próxima posição de cada pé para mostrar no RViz
 
 */
 
@@ -155,14 +153,12 @@ void Planner::mapCallback(const grid_map_msgs::GridMap& msg)
     traversability_RL = inputMap.atPosition("traversability", grid_map::Position(w_posRL.x(), w_posRL.y()), grid_map::InterpolationMethods::INTER_LINEAR);
     traversability_RR = inputMap.atPosition("traversability", grid_map::Position(w_posRR.x(), w_posRR.y()), grid_map::InterpolationMethods::INTER_LINEAR);
 
-    ROS_INFO("Elevation: %f\n", w_posFL.z());
+    ROS_INFO("Elevation: %f\n", elevation_FL);
 
     ROS_INFO("Traversability: %f\n", traversability_FL);
 
     // Publisher da posição dos foot markers atuais do robô 
     updateFootMarkers();
-
-    // Testar no SuperPC: rostopic hz /grid_map_filter/filtered_map , /elevation_mapping/elevation_map
 }
 
 
@@ -274,11 +270,3 @@ bool Planner::updateNextFootMarkers()
 }
 
 }
-
-/*
-    // Base to hip position
-    Eigen::Vector3d FL(stateWorld.pos_x+base_to_hip_x, stateWorld.pos_y+base_to_hip_y, 0.0);
-    Eigen::Vector3d FR(stateWorld.pos_x+base_to_hip_x, stateWorld.pos_y-base_to_hip_y, 0.0);
-    Eigen::Vector3d RL(stateWorld.pos_x-base_to_hip_x, stateWorld.pos_y+base_to_hip_y, 0.0);
-    Eigen::Vector3d RR(stateWorld.pos_x-base_to_hip_x, stateWorld.pos_y-base_to_hip_y, 0.0);
-*/
