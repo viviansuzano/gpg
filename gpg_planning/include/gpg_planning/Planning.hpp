@@ -10,6 +10,7 @@
 #include <grid_map_msgs/GridMap.h>
 #include "gpg_planning/FootPositionVisualizer.h"
 #include <vector>
+#include <array>
 #include <Eigen/Dense>
 
 namespace footstep_planning {
@@ -27,11 +28,9 @@ class Planner{
 
         void poseCallback(const nav_msgs::Odometry::ConstPtr& msg);
         void cmdCallback(const geometry_msgs::Twist& msg);
-        void footCallback(const visualization_msgs::Marker& msg);
         void mapCallback(const grid_map_msgs::GridMap& msg);
 
         bool updateFootMarkers();
-
         bool updateNextFootMarkers();
 
 
@@ -43,13 +42,7 @@ class Planner{
 
         ros::Subscriber cmd_subscriber;
 
-        ros::Subscriber footFL_subscriber;
-        ros::Subscriber footFR_subscriber;
-        ros::Subscriber footRL_subscriber;
-        ros::Subscriber footRR_subscriber;
-
         ros::Subscriber map_subscriber;
-
 
         std::string pose_topic;
         std::string cmd_topic;
@@ -62,16 +55,9 @@ class Planner{
         double t_stance;
         double k_velocity;
         double gravity;
+        double threshold_traversability;
 
-        tf::Vector3 w_posFL;
-        tf::Vector3 w_posFR;
-        tf::Vector3 w_posRL;
-        tf::Vector3 w_posRR;
-
-        tf::Vector3 w_nextPosFL;
-        tf::Vector3 w_nextPosFR;
-        tf::Vector3 w_nextPosRL;
-        tf::Vector3 w_nextPosRR;
+        enum FootIDs {FL=0, FR, RL, RR, nextFL, nextFR, nextRL, nextRR};
 
         footstep_marker::FootPositionVisualizer footPosVisualizer;
         footstep_marker::FootPositionVisualizer nextFootPosVisualizer;
@@ -81,13 +67,6 @@ class Planner{
         tf::Transform w_transformTwist_b;
         tf::Transform w_transformFootPos_b;
 
-        struct robotState
-        {
-            float pos_x, pos_y, pos_z;
-            float vel_x, vel_y, vel_z, vela_x, vela_y, vela_z;
-        };
-
-        tf::Vector3 w_basePos;
         tf::Vector3 w_baseTwist_linear;
         tf::Vector3 w_baseTwist_angular;
         tf::Vector3 b_baseTwist_linear;
@@ -98,21 +77,13 @@ class Planner{
         tf::Vector3 b_cmdVel_linear;
         tf::Vector3 b_cmdVel_angular;
 
-        double elevation_FL;
-        double elevation_FR;
-        double elevation_RL;
-        double elevation_RR;
+        std::array<tf::Vector3, 4> b_pos;
+        std::array<tf::Vector3, 8> w_pos;
 
-        double traversability_FL;
-        double traversability_FR;
-        double traversability_RL;
-        double traversability_RR;
-
-        tf::Vector3 r_cmd_FL;
-        tf::Vector3 r_cmd_FR;
-        tf::Vector3 r_cmd_RL;
-        tf::Vector3 r_cmd_RR;
-
+        std::array<double, 8> elevation;
+        std::array<double, 8> traversability;
+        std::array<u_int, 4> binary_t;
+        std::array<u_int, 4> nextBinary_t;
 };
 
 } /* namespace*/

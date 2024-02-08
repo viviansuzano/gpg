@@ -23,12 +23,6 @@ Planner::Planner(ros::NodeHandle& nodeHandle, bool& success)
     // Subscriber grid_map, acessando layer de elevation e traversability
     map_subscriber = node_handle.subscribe(map_topic, 1, &Planner::mapCallback, this);
 
-    // Subscriber foot_positions para calcular, usando Raibert Heuristic, e publicar os next foot markers do robô
-    //footFL_subscriber = node_handle.subscribe(foot_topic + "_FL", 1, &Planner::footCallback, this);
-    //footFR_subscriber = node_handle.subscribe(foot_topic + "_FR", 1, &Planner::footCallback, this);
-    //footRL_subscriber = node_handle.subscribe(foot_topic + "_RL", 1, &Planner::footCallback, this);
-    //footRR_subscriber = node_handle.subscribe(foot_topic + "_RR", 1, &Planner::footCallback, this);
-
     success = true;
 }
 
@@ -48,9 +42,10 @@ bool Planner::readParameters()
     node_handle.param("base_to_hip_x", base_to_hip_x, 0.1881);
     node_handle.param("base_to_hip_y", base_to_hip_y, 0.04675);
     node_handle.param("robot_height", robot_height, 0.4);
-    node_handle.param("t_stance", t_stance, 2.0);
+    node_handle.param("t_stance", t_stance, 1.0);
     node_handle.param("k_velocity", k_velocity, 0.03);
     node_handle.param("gravity", gravity, 9.81);
+    node_handle.param("threshold_traversability", threshold_traversability, 0.5);
     return true;
 }
 
@@ -69,7 +64,7 @@ mapCallback
 
 footCallback
     Calcular Raibert
-    updateNextFootMarkers: ublicar a próxima posição de cada pé para mostrar no RViz
+    updateNextFootMarkers: publicar a próxima posição de cada pé para mostrar no RViz
 
 */
 
@@ -98,8 +93,6 @@ void Planner::poseCallback(const nav_msgs::Odometry::ConstPtr& msg)
     w_baseTwist_linear = w_transformTwist_b * b_baseTwist_linear;
     w_baseTwist_angular = w_transformTwist_b * b_baseTwist_angular;  
 
-    w_basePos.setValue(msg->pose.pose.position.x, msg->pose.pose.position.y, msg->pose.pose.position.z);
-
 
     // Transforma posição x,y dos pés do base frame para world frame, usando matriz de transformação
 
@@ -110,17 +103,19 @@ void Planner::poseCallback(const nav_msgs::Odometry::ConstPtr& msg)
     w_transformFootPos_b.setRotation(baseOrientation);
     w_transformFootPos_b.setOrigin(translationWorldToBaseFootprint);
 
-    tf::Vector3 b_posFL(base_to_hip_x, base_to_hip_y, 0.0);
-    tf::Vector3 b_posFR(base_to_hip_x, -base_to_hip_y, 0.0);
-    tf::Vector3 b_posRL(-base_to_hip_x, base_to_hip_y, 0.0);
-    tf::Vector3 b_posRR(-base_to_hip_x, -base_to_hip_y, 0.0);
+    b_pos.at(FL) = {base_to_hip_x, base_to_hip_y, 0.0};
+    b_pos.at(FR) = {base_to_hip_x, -base_to_hip_y, 0.0};
+    b_pos.at(RL) = {-base_to_hip_x, base_to_hip_y, 0.0};
+    b_pos.at(RR) = {-base_to_hip_x, -base_to_hip_y, 0.0};
     
-    w_posFL = w_transformFootPos_b * b_posFL;
-    w_posFR = w_transformFootPos_b * b_posFR;
-    w_posRL = w_transformFootPos_b * b_posRL;
-    w_posRR = w_transformFootPos_b * b_posRR;
+    for (int i=0; i < b_pos.size(); i++)
+        w_pos.at(i) = w_transformFootPos_b * b_pos.at(i);
+    
+    // Atualiza posições dos foot markers atuais do robô 
+    updateFootMarkers();
 
-    //ROS_INFO("w_posFL = (%f, %f, %f)\n", w_posFL.x(), w_posFL.y(), w_posFL.z());
+    // Atualiza próximas posições dos foot markers do robô
+    updateNextFootMarkers();
 }
 
 
@@ -132,9 +127,9 @@ void Planner::cmdCallback(const geometry_msgs::Twist& msg)
     w_cmdVel_linear = w_transformTwist_b * b_cmdVel_linear;
     w_cmdVel_angular = w_transformTwist_b * b_cmdVel_angular; 
 
-    ROS_INFO("cmd (base): (%f, %f, %f)\ncmd (world): (%f, %f, %f)\n", 
-        b_cmdVel_linear.x(), b_cmdVel_linear.y(), b_cmdVel_linear.z(), 
-        w_cmdVel_linear.x(), w_cmdVel_linear.y(), w_cmdVel_linear.z());
+    //ROS_INFO("cmd (base): (%f, %f, %f)\ncmd (world): (%f, %f, %f)\n", 
+    //    b_cmdVel_linear.x(), b_cmdVel_linear.y(), b_cmdVel_linear.z(), 
+    //    w_cmdVel_linear.x(), w_cmdVel_linear.y(), w_cmdVel_linear.z());
 }
 
 
@@ -143,128 +138,77 @@ void Planner::mapCallback(const grid_map_msgs::GridMap& msg)
     grid_map::GridMap inputMap;
     grid_map::GridMapRosConverter::fromMessage(msg, inputMap, {"elevation","traversability"});
 
-    elevation_FL = inputMap.atPosition("elevation", grid_map::Position(w_posFL.x(), w_posFL.y()), grid_map::InterpolationMethods::INTER_LINEAR);
-    elevation_FR = inputMap.atPosition("elevation", grid_map::Position(w_posFR.x(), w_posFR.y()), grid_map::InterpolationMethods::INTER_LINEAR);
-    elevation_RL = inputMap.atPosition("elevation", grid_map::Position(w_posRL.x(), w_posRL.y()), grid_map::InterpolationMethods::INTER_LINEAR);
-    elevation_RR = inputMap.atPosition("elevation", grid_map::Position(w_posRR.x(), w_posRR.y()), grid_map::InterpolationMethods::INTER_LINEAR);
+    // Obtém elevação e atravessabilidade das posições atuais e futuras dos pés
+    for (int i=0; i < elevation.size(); i++)
+    {
+        elevation.at(i) = inputMap.atPosition("elevation", grid_map::Position(w_pos.at(i).x(), w_pos.at(i).y()), grid_map::InterpolationMethods::INTER_LINEAR);
+        if (std::isnan(elevation.at(i))) // insere elevação nula para as posições que não tem dado de elevação (NaN)
+            elevation.at(i) = 0;
+    }
 
-    traversability_FL = inputMap.atPosition("traversability", grid_map::Position(w_posFL.x(), w_posFL.y()), grid_map::InterpolationMethods::INTER_LINEAR);
-    traversability_FR = inputMap.atPosition("traversability", grid_map::Position(w_posFR.x(), w_posFR.y()), grid_map::InterpolationMethods::INTER_LINEAR);
-    traversability_RL = inputMap.atPosition("traversability", grid_map::Position(w_posRL.x(), w_posRL.y()), grid_map::InterpolationMethods::INTER_LINEAR);
-    traversability_RR = inputMap.atPosition("traversability", grid_map::Position(w_posRR.x(), w_posRR.y()), grid_map::InterpolationMethods::INTER_LINEAR);
+    for (int i=0; i < traversability.size(); i++)
+    {
+        traversability.at(i) = inputMap.atPosition("traversability", grid_map::Position(w_pos.at(i).x(), w_pos.at(i).y()), grid_map::InterpolationMethods::INTER_LINEAR);
+        if (std::isnan(traversability.at(i)))
+            traversability.at(i) = 0;
+    }
 
-    ROS_INFO("Elevation: %f\n", elevation_FL);
+    // Aplica threshold de atravessabilidade
+    binary_t = {traversability.at(FL) >= threshold_traversability,
+                traversability.at(FR) >= threshold_traversability,
+                traversability.at(RL) >= threshold_traversability,
+                traversability.at(RR) >= threshold_traversability};
 
-    ROS_INFO("Traversability: %f\n", traversability_FL);
-
-    // Publisher da posição dos foot markers atuais do robô 
-    updateFootMarkers();
+    nextBinary_t = {traversability.at(nextFL) >= threshold_traversability,
+                traversability.at(nextFR) >= threshold_traversability,
+                traversability.at(nextRL) >= threshold_traversability,
+                traversability.at(nextRR) >= threshold_traversability};
 }
 
 
 bool Planner::updateFootMarkers()
 {
     // Coloca a posição de cada pé em um vector3d para ser publicado pela instância de FootPositionVisualizer
-    Eigen::Vector3d FL(w_posFL.x(), w_posFL.y(), elevation_FL);
-    Eigen::Vector3d FR(w_posFR.x(), w_posFR.y(), elevation_FR);
-    Eigen::Vector3d RL(w_posRL.x(), w_posRL.y(), elevation_RL);
-    Eigen::Vector3d RR(w_posRR.x(), w_posRR.y(), elevation_RR);
+    Eigen::Vector3d posFL(w_pos.at(FL).x(), w_pos.at(FL).y(), elevation.at(FL));
+    Eigen::Vector3d posFR(w_pos.at(FR).x(), w_pos.at(FR).y(), elevation.at(FR));
+    Eigen::Vector3d posRL(w_pos.at(RL).x(), w_pos.at(RL).y(), elevation.at(RL));
+    Eigen::Vector3d posRR(w_pos.at(RR).x(), w_pos.at(RR).y(), elevation.at(RR));
 
-    footPositions.push_back(FL);
-    footPositions.push_back(FR);
-    footPositions.push_back(RL);
-    footPositions.push_back(RR);
+    footPositions = {posFL, posFR, posRL, posRR};
 
     footPosVisualizer.updateMarkers(footPositions);
+    footPosVisualizer.changeColor(binary_t, 0);
     footPosVisualizer.publish();
-
-    ROS_INFO("Step markers atualizados!");
 
     return true;
 }
 
 
-void Planner::footCallback(const visualization_msgs::Marker& msg)
-{
-    // Calcular próximos passos por meio de Raibert Heuristic
-    tf::Vector3 p_hip, p_symmetry, p_centrifugal, r_cmd;
-
-    p_hip.setValue(msg.pose.position.x, msg.pose.position.y, 0.0);
-
-    // FL = 0 | FR = 1 | RL = 2 | RR = 3
-    switch(msg.id) 
-    {
-        case 0:
-            p_hip.setZ(w_posFL.z());
-            break;
-        case 1:
-            p_hip.setZ(w_posFR.z());
-            break;
-        case 2:
-            p_hip.setZ(w_posRL.z());
-            break;
-        case 3:
-            p_hip.setZ(w_posRR.z());
-            break;
-        default:
-            ROS_INFO("ID Marker errado! Raibert Heuristic vai retornar a posicao (0,0,0)");
-    }
-
-    p_symmetry = (0.5*t_stance*w_baseTwist_linear + k_velocity*(w_baseTwist_linear - w_cmdVel_linear));
-
-    p_centrifugal = 0.5*sqrt(robot_height/gravity)*(w_baseTwist_linear.cross(w_baseTwist_angular));
-
-    r_cmd = p_hip + p_symmetry + p_centrifugal;
-    
-    // FL = 0 | FR = 1 | RL = 2 | RR = 3
-    switch(msg.id) 
-    {
-        case 0:
-            r_cmd_FL.setValue(r_cmd.x(), r_cmd.y(), r_cmd.z());
-            break;
-        case 1:
-            r_cmd_FR.setValue(r_cmd.x(), r_cmd.y(), r_cmd.z());
-            break;
-        case 2:
-            r_cmd_RL.setValue(r_cmd.x(), r_cmd.y(), r_cmd.z());
-            break;
-        case 3:
-            r_cmd_RR.setValue(r_cmd.x(), r_cmd.y(), r_cmd.z());
-            break;
-        default:
-            r_cmd_FL.setValue(0,0,0);
-            r_cmd_FR.setValue(0,0,0);
-            r_cmd_RL.setValue(0,0,0);
-            r_cmd_RR.setValue(0,0,0);
-    }
-
-    if (msg.id == 3)
-    {
-        updateNextFootMarkers();
-    }
-}
-
 bool Planner::updateNextFootMarkers()
 {
-    // Coloca a posição de cada pé em um vector3d para ser publicado pela instância de FootPositionVisualizer
-    /*Eigen::Vector3d nextFL(r_cmd_FL.x(), r_cmd_FL.y(), elevation_nextFL);
-    Eigen::Vector3d nextFR(r_cmd_FR.x(), r_cmd_FR.y(), elevation_nextFR);
-    Eigen::Vector3d nextRL(r_cmd_RL.x(), r_cmd_RL.y(), elevation_nextRL);
-    Eigen::Vector3d nextRR(r_cmd_RR.x(), r_cmd_RR.y(), elevation_nextRR);*/
-    Eigen::Vector3d nextFL(r_cmd_FL.x(), r_cmd_FL.y(), r_cmd_FL.z());
-    Eigen::Vector3d nextFR(r_cmd_FR.x(), r_cmd_FR.y(), r_cmd_FR.z());
-    Eigen::Vector3d nextRL(r_cmd_RL.x(), r_cmd_RL.y(), r_cmd_RL.z());
-    Eigen::Vector3d nextRR(r_cmd_RR.x(), r_cmd_RR.y(), r_cmd_RR.z());
+    // Calcula próximos passos por meio de Raibert Heuristic
+    tf::Vector3 p_symmetry, p_centrifugal;
 
-    nextFootPositions.push_back(nextFL);
-    nextFootPositions.push_back(nextFR);
-    nextFootPositions.push_back(nextRL);
-    nextFootPositions.push_back(nextRR);
+    std::array<tf::Vector3, 4> p_hip = {w_pos.at(FL), w_pos.at(FR), w_pos.at(RL), w_pos.at(RR)};
+
+    p_symmetry = 0.5*t_stance*w_baseTwist_linear + k_velocity*(w_baseTwist_linear - w_cmdVel_linear);
+
+    p_centrifugal = 0.5*sqrt(robot_height/gravity)*(w_baseTwist_linear.cross(w_cmdVel_angular));
+
+    for (int i=0, j=4; i < p_hip.size(); i++, j++)
+            w_pos.at(j) = p_hip.at(i) + p_symmetry + p_centrifugal;
+    
+    // Coloca a posição de cada pé em um vector3d para ser publicado pela instância de FootPositionVisualizer
+    Eigen::Vector3d posNextFL(w_pos.at(nextFL).x(), w_pos.at(nextFL).y(), elevation.at(nextFL));
+    Eigen::Vector3d posNextFR(w_pos.at(nextFR).x(), w_pos.at(nextFR).y(), elevation.at(nextFR));
+    Eigen::Vector3d posNextRL(w_pos.at(nextRL).x(), w_pos.at(nextRL).y(), elevation.at(nextRL));
+    Eigen::Vector3d posNextRR(w_pos.at(nextRR).x(), w_pos.at(nextRR).y(), elevation.at(nextRR));
+
+    nextFootPositions = {posNextFL, posNextFR, posNextRL, posNextRR};
 
     nextFootPosVisualizer.updateMarkers(nextFootPositions);
+    nextFootPosVisualizer.changeColor(nextBinary_t, 1);
     nextFootPosVisualizer.publish();
-
-    ROS_INFO("Next steps markers atualizados!");
 
     return true;
 }

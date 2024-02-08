@@ -4,7 +4,9 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
+        - /Grid Map Filters1
         - /Foot Markers1
+        - /NextFoot Markers1
       Splitter Ratio: 0.4922049045562744
     Tree Height: 419
   - Class: rviz/Selection
@@ -53,98 +55,18 @@ Visualization Manager:
     - Alpha: 0.5
       Class: rviz/RobotModel
       Collision Enabled: false
-      Enabled: true
+      Enabled: false
       Links:
         All Links Enabled: true
         Expand Joint Details: false
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        base_footprint:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        base_link_cad:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        caster_back_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        d435_bottom_screw_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        d435_color_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        d435_color_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        d435_depth_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        d435_depth_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        d435_left_ir_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        d435_left_ir_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        d435_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        d435_right_ir_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        d435_right_ir_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        imu_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        wheel_left_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        wheel_right_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
       Update Interval: 0
-      Value: true
+      Value: false
       Visual Enabled: true
     - Class: rviz/TF
       Enabled: true
@@ -240,6 +162,7 @@ Visualization Manager:
       Unreliable: false
       Value: true
       Visibility:
+        Elevation: true
         Elevation Map: false
         Foot Markers:
           FL: true
@@ -256,7 +179,12 @@ Visualization Manager:
           Traverability Grid: true
           Traversability: true
           Value: true
-        NextFoot Markers: true
+        NextFoot Markers:
+          FL: true
+          FR: true
+          RL: true
+          RR: true
+          Value: true
         PointCloud2: false
         RobotModel: false
         TF: true
@@ -322,8 +250,8 @@ Visualization Manager:
           Color: 200; 200; 200
           Color Layer: traversability
           Color Transformer: GridMapLayer
-          ColorMap: default
-          Enabled: false
+          ColorMap: jet
+          Enabled: true
           Grid Cell Decimation: 1
           Grid Line Thickness: 0.10000000149011612
           Height Layer: elevation
@@ -331,7 +259,7 @@ Visualization Manager:
           History Length: 1
           Invert ColorMap: true
           Max Color: 255; 255; 255
-          Max Intensity: 1.2000000476837158
+          Max Intensity: 1
           Min Color: 0; 0; 0
           Min Intensity: 0
           Name: Traversability
@@ -339,7 +267,7 @@ Visualization Manager:
           Topic: /grid_map_filter/filtered_map
           Unreliable: false
           Use ColorMap: true
-          Value: false
+          Value: true
         - Alpha: 1
           Autocompute Intensity Bounds: false
           Class: grid_map_rviz_plugin/GridMap
@@ -430,8 +358,32 @@ Visualization Manager:
           Unreliable: false
           Use Timestamp: false
           Value: false
-      Enabled: false
+      Enabled: true
       Name: Grid Map Filters
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Class: grid_map_rviz_plugin/GridMap
+      Color: 200; 200; 200
+      Color Layer: elevation
+      Color Transformer: ""
+      ColorMap: jet
+      Enabled: false
+      Grid Cell Decimation: 1
+      Grid Line Thickness: 0.10000000149011612
+      Height Layer: elevation
+      Height Transformer: ""
+      History Length: 1
+      Invert ColorMap: false
+      Max Color: 255; 255; 255
+      Max Intensity: 10
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: Elevation
+      Show Grid Lines: true
+      Topic: /grid_map_filter/filtered_map
+      Unreliable: false
+      Use ColorMap: true
+      Value: false
     - Class: rviz/Group
       Displays:
         - Class: rviz/Marker
@@ -439,7 +391,7 @@ Visualization Manager:
           Marker Topic: /foot_positions_FL
           Name: FL
           Namespaces:
-            {}
+            foot_pos_FL: true
           Queue Size: 100
           Value: true
         - Class: rviz/Marker
@@ -447,7 +399,7 @@ Visualization Manager:
           Marker Topic: /foot_positions_FR
           Name: FR
           Namespaces:
-            {}
+            foot_pos_FR: true
           Queue Size: 100
           Value: true
         - Class: rviz/Marker
@@ -455,7 +407,7 @@ Visualization Manager:
           Marker Topic: /foot_positions_RL
           Name: RL
           Namespaces:
-            {}
+            foot_pos_RL: true
           Queue Size: 100
           Value: true
         - Class: rviz/Marker
@@ -463,14 +415,46 @@ Visualization Manager:
           Marker Topic: /foot_positions_RR
           Name: RR
           Namespaces:
-            {}
+            foot_pos_RR: true
           Queue Size: 100
           Value: true
       Enabled: true
       Name: Foot Markers
     - Class: rviz/Group
-      Displays: ~
-      Enabled: false
+      Displays:
+        - Class: rviz/Marker
+          Enabled: true
+          Marker Topic: /next_foot_positions_FL
+          Name: FL
+          Namespaces:
+            foot_pos_FL: true
+          Queue Size: 100
+          Value: true
+        - Class: rviz/Marker
+          Enabled: true
+          Marker Topic: /next_foot_positions_FR
+          Name: FR
+          Namespaces:
+            foot_pos_FR: true
+          Queue Size: 100
+          Value: true
+        - Class: rviz/Marker
+          Enabled: true
+          Marker Topic: /next_foot_positions_RL
+          Name: RL
+          Namespaces:
+            foot_pos_RL: true
+          Queue Size: 100
+          Value: true
+        - Class: rviz/Marker
+          Enabled: true
+          Marker Topic: /next_foot_positions_RR
+          Name: RR
+          Namespaces:
+            foot_pos_RR: true
+          Queue Size: 100
+          Value: true
+      Enabled: true
       Name: NextFoot Markers
   Enabled: true
   Global Options:
@@ -500,7 +484,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 1.6719508171081543
+      Distance: 1.903099536895752
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -508,17 +492,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.7284085154533386
-        Y: 1.1216322183609009
-        Z: 0.30866220593452454
+        X: 0.40759339928627014
+        Y: 1.2871475219726562
+        Z: 0.3810608983039856
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6347973942756653
+      Pitch: 0.4697973430156708
       Target Frame: <Fixed Frame>
-      Yaw: 2.2403016090393066
+      Yaw: 2.670297145843506
     Saved: ~
 Window Geometry:
   Camera:
