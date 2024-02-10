@@ -37,10 +37,8 @@ bool Planner::readParameters()
     node_handle.param("pose_topic", pose_topic, std::string("/ground_truth"));
     node_handle.param("cmd_topic", cmd_topic, std::string("/gpg_velocity_controller/cmd_vel"));
     node_handle.param("map_topic", map_topic, std::string("/grid_map_filter/filtered_map"));
-    node_handle.param("foot_topic", foot_topic, std::string("/foot_positions"));
-    node_handle.param("next_foot_topic", next_foot_topic, std::string("/next_foot_positions"));
     node_handle.param("base_to_hip_x", base_to_hip_x, 0.1881);
-    node_handle.param("base_to_hip_y", base_to_hip_y, 0.04675);
+    node_handle.param("base_to_hip_y", base_to_hip_y, 0.12675);
     node_handle.param("robot_height", robot_height, 0.4);
     node_handle.param("t_stance", t_stance, 1.0);
     node_handle.param("k_velocity", k_velocity, 0.03);
@@ -49,29 +47,17 @@ bool Planner::readParameters()
     return true;
 }
 
-/*
-poseCallback
-    Pegar posição xy da base em relação ao world
-    Pegar velocidade da base em relação ao world
-    Calcular posição xy dos pés em relação ao world
-
-cmdCallback
-    Pegar velocidade de comando em relação ao world
-    
-mapCallback
-    Pegar elevação e traversability da posição xy dos pés
-    updateFootMarkers: Publicar posição dos pés (x,y,elevação) para mostrar no RViz
-
-footCallback
-    Calcular Raibert
-    updateNextFootMarkers: publicar a próxima posição de cada pé para mostrar no RViz
-
-*/
-
 
 void Planner::poseCallback(const nav_msgs::Odometry::ConstPtr& msg)
 {
-    // Transforma velocidade do base frame para world frame, usando matriz de rotação
+    // Velocidade linear e angular da base do robô
+    b_baseTwist_linear.setValue(msg->twist.twist.linear.x, msg->twist.twist.linear.y, msg->twist.twist.linear.z);
+    b_baseTwist_angular.setValue(msg->twist.twist.angular.x, msg->twist.twist.angular.y, msg->twist.twist.angular.z);
+
+    // Transforma posição x,y das patas do base frame para world frame, usando matriz de transformação
+
+    // translação
+    tf::Vector3 translationWorldToBaseFootprint(msg->pose.pose.position.x, msg->pose.pose.position.y, msg->pose.pose.position.z);
 
     // orientação
     tf::Quaternion baseOrientation;
@@ -79,25 +65,6 @@ void Planner::poseCallback(const nav_msgs::Odometry::ConstPtr& msg)
     baseOrientation.setY(msg->pose.pose.orientation.y);
     baseOrientation.setZ(msg->pose.pose.orientation.z);
     baseOrientation.setW(msg->pose.pose.orientation.w);
-
-    // translação
-    tf::Vector3 translationTwist(0.0, 0.0, 0.0);
-
-    // rotação que descreve a orientação do frame base_footprint em relação ao frame world
-    w_transformTwist_b.setRotation(baseOrientation);
-    w_transformTwist_b.setOrigin(translationTwist);
-
-    b_baseTwist_linear.setValue(msg->twist.twist.linear.x, msg->twist.twist.linear.y, msg->twist.twist.linear.z);
-    b_baseTwist_angular.setValue(msg->twist.twist.angular.x, msg->twist.twist.angular.y, msg->twist.twist.angular.z);
-
-    w_baseTwist_linear = w_transformTwist_b * b_baseTwist_linear;
-    w_baseTwist_angular = w_transformTwist_b * b_baseTwist_angular;  
-
-
-    // Transforma posição x,y dos pés do base frame para world frame, usando matriz de transformação
-
-    // translação
-    tf::Vector3 translationWorldToBaseFootprint(msg->pose.pose.position.x, msg->pose.pose.position.y, msg->pose.pose.position.z);
 
     // transformação que descreve o frame base_footprint em relação ao frame world
     w_transformFootPos_b.setRotation(baseOrientation);
@@ -123,13 +90,6 @@ void Planner::cmdCallback(const geometry_msgs::Twist& msg)
 {
     b_cmdVel_linear.setValue(msg.linear.x, msg.linear.y, msg.linear.z);
     b_cmdVel_angular.setValue(msg.angular.x, msg.angular.y, msg.angular.z);
-
-    w_cmdVel_linear = w_transformTwist_b * b_cmdVel_linear;
-    w_cmdVel_angular = w_transformTwist_b * b_cmdVel_angular; 
-
-    //ROS_INFO("cmd (base): (%f, %f, %f)\ncmd (world): (%f, %f, %f)\n", 
-    //    b_cmdVel_linear.x(), b_cmdVel_linear.y(), b_cmdVel_linear.z(), 
-    //    w_cmdVel_linear.x(), w_cmdVel_linear.y(), w_cmdVel_linear.z());
 }
 
 
@@ -138,7 +98,7 @@ void Planner::mapCallback(const grid_map_msgs::GridMap& msg)
     grid_map::GridMap inputMap;
     grid_map::GridMapRosConverter::fromMessage(msg, inputMap, {"elevation","traversability"});
 
-    // Obtém elevação e atravessabilidade das posições atuais e futuras dos pés
+    // Obtém elevação e atravessabilidade das posições atuais e futuras das patas
     for (int i=0; i < elevation.size(); i++)
     {
         elevation.at(i) = inputMap.atPosition("elevation", grid_map::Position(w_pos.at(i).x(), w_pos.at(i).y()), grid_map::InterpolationMethods::INTER_LINEAR);
@@ -150,7 +110,7 @@ void Planner::mapCallback(const grid_map_msgs::GridMap& msg)
     {
         traversability.at(i) = inputMap.atPosition("traversability", grid_map::Position(w_pos.at(i).x(), w_pos.at(i).y()), grid_map::InterpolationMethods::INTER_LINEAR);
         if (std::isnan(traversability.at(i)))
-            traversability.at(i) = 0;
+            traversability.at(i) = threshold_traversability;
     }
 
     // Aplica threshold de atravessabilidade
@@ -191,9 +151,9 @@ bool Planner::updateNextFootMarkers()
 
     std::array<tf::Vector3, 4> p_hip = {w_pos.at(FL), w_pos.at(FR), w_pos.at(RL), w_pos.at(RR)};
 
-    p_symmetry = 0.5*t_stance*w_baseTwist_linear + k_velocity*(w_baseTwist_linear - w_cmdVel_linear);
+    p_symmetry = 0.5*t_stance*b_baseTwist_linear + k_velocity*(b_baseTwist_linear - b_cmdVel_linear);
 
-    p_centrifugal = 0.5*sqrt(robot_height/gravity)*(w_baseTwist_linear.cross(w_cmdVel_angular));
+    p_centrifugal = 0.5*sqrt(robot_height/gravity)*(b_baseTwist_linear.cross(b_cmdVel_angular));
 
     for (int i=0, j=4; i < p_hip.size(); i++, j++)
             w_pos.at(j) = p_hip.at(i) + p_symmetry + p_centrifugal;

@@ -33,7 +33,7 @@
   <arg name="z"                                     default="0.0"/>
   <arg name="roll"                                  default="0.0"/>
   <arg name="pitch"                                 default="0.0"/>
-  <arg name="yaw"                                   default="0.0"/>
+  <arg name="yaw"                                   default="1.5708"/>
 
   <!-- Load Gazebo world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">

@@ -29,12 +29,13 @@ public:
 	bool initMarkers(int num) {
 		// num = 0 -> current foot markers | num = 1 -> next foot markers
 		int id[4] = {0+num*4, 1+num*4, 2+num*4, 3+num*4};
+		
 		std::vector<float> rgba;
 
 		if (num == 0){
 			rgba = {0.13, 0.16, 0.85, 1.0};
 		} else if (num == 1){
-			rgba = {0.14, 0.83, 0.3, 0.6};
+			rgba = {0.14, 0.83, 0.3, 0.8};
 		} else{
 			rgba = {0.45, 0.45, 0.5, 1.0};
 		}
@@ -114,7 +115,7 @@ public:
 		// Altera cor ou canal alfa de acordo com a atravessabilidade binária
 		if (binary_traversability.at(FL) == 0){
 			if (num == 0)
-				footPosFL_.second.color.a = 0.6;
+				footPosFL_.second.color.a = 0.8;
 			else {
 				footPosFL_.second.color.r = 0.83;
 				footPosFL_.second.color.g = 0.16;
@@ -132,7 +133,7 @@ public:
 	
 		if (binary_traversability.at(FR) == 0){
 			if (num == 0)
-				footPosFR_.second.color.a = 0.6;
+				footPosFR_.second.color.a = 0.8;
 			else {
 				footPosFR_.second.color.r = 0.83;
 				footPosFR_.second.color.g = 0.16;
@@ -150,7 +151,7 @@ public:
 
 		if (binary_traversability.at(RL) == 0){
 			if (num == 0)
-				footPosRL_.second.color.a = 0.6;
+				footPosRL_.second.color.a = 0.8;
 			else {
 				footPosRL_.second.color.r = 0.83;
 				footPosRL_.second.color.g = 0.16;
@@ -168,7 +169,7 @@ public:
 
 		if (binary_traversability.at(RR) == 0){
 			if (num == 0)
-				footPosRR_.second.color.a = 0.6;
+				footPosRR_.second.color.a = 0.8;
 			else {
 				footPosRR_.second.color.r = 0.83;
 				footPosRR_.second.color.g = 0.16;

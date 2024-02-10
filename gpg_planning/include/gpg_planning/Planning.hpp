@@ -47,8 +47,6 @@ class Planner{
         std::string pose_topic;
         std::string cmd_topic;
         std::string map_topic;
-        std::string foot_topic;
-        std::string next_foot_topic;
         double base_to_hip_x;
         double base_to_hip_y;
         double robot_height;
@@ -64,16 +62,11 @@ class Planner{
         std::vector<Eigen::Vector3d> footPositions;
         std::vector<Eigen::Vector3d> nextFootPositions;
 
-        tf::Transform w_transformTwist_b;
         tf::Transform w_transformFootPos_b;
 
-        tf::Vector3 w_baseTwist_linear;
-        tf::Vector3 w_baseTwist_angular;
         tf::Vector3 b_baseTwist_linear;
         tf::Vector3 b_baseTwist_angular;
 
-        tf::Vector3 w_cmdVel_linear;
-        tf::Vector3 w_cmdVel_angular;
         tf::Vector3 b_cmdVel_linear;
         tf::Vector3 b_cmdVel_angular;
 
