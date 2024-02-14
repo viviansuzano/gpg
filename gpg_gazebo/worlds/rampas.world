@@ -186,10 +186,10 @@
       <pose>4.00511 0.980776 0 0 -0 0</pose>
     </model>
     <state world_name='default'>
-      <sim_time>241 38000000</sim_time>
-      <real_time>244 740536726</real_time>
-      <wall_time>1707874775 938612151</wall_time>
-      <iterations>241038</iterations>
+      <sim_time>613 617000000</sim_time>
+      <real_time>378 252401638</real_time>
+      <wall_time>1707881390 573574566</wall_time>
+      <iterations>372579</iterations>
       <model name='ground_plane'>
         <pose>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -200,24 +200,44 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
-      <model name='rampa'>
-        <pose>3.31312 1 -0.060009 1e-06 1e-06 0</pose>
+      <model name='prisma_trapezoidal'>
+        <pose>5.51892 1 0.000205 0 -0 0</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>3.31312 1 -0.060009 1e-06 1e-06 0</pose>
+          <pose>5.51892 1 0.000205 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>-0.000414 -1e-06 0.277161 -3.1408 -1.12616 -3.14158</acceleration>
+          <wrench>-0.000414 -1e-06 0.277161 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='rampa'>
+        <pose>3.31145 1.00001 -0.060004 0 2e-06 6.1e-05</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>3.31145 1.00001 -0.060004 0 2e-06 6.1e-05</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
         </link>
       </model>
       <model name='rampa_0'>
-        <pose>3.80031 1.00002 -0.060005 0 -2e-06 3.1415</pose>
+        <pose>4.5 1.00002 -0.060001 -1e-06 -1e-06 3.1415</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>3.80031 1.00002 -0.060005 0 -2e-06 3.1415</pose>
+          <pose>4.5 1.00002 -0.060001 -1e-06 -1e-06 3.1415</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 -9.8 0 -0 0</acceleration>
           <wrench>0 0 -9.8 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='unit_box'>
+        <pose>3.90499 0.999443 0.060901 0 -0 6.3e-05</pose>
+        <scale>0.707011 0.356964 0.121803</scale>
+        <link name='link'>
+          <pose>3.90499 0.999443 0.060901 0 -0 6.3e-05</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 -0 -0 0 -0 0</acceleration>
+          <wrench>0 -0 -0 0 -0 0</wrench>
         </link>
       </model>
       <light name='sun'>
@@ -226,10 +246,112 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>6.71702 0.504867 2.063 0 0.479642 2.82419</pose>
+        <pose>5.7342 -0.883402 1.70278 -0 0.585798 2.14019</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
     </gui>
+    <model name='unit_box'>
+      <pose>3.90449 2.48681 0.5 0 -0 0</pose>
+      <link name='link'>
+        <inertial>
+          <mass>1</mass>
+          <inertia>
+            <ixx>0.166667</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.166667</iyy>
+            <iyz>0</iyz>
+            <izz>0.166667</izz>
+          </inertia>
+          <pose>0 0 0 0 -0 0</pose>
+        </inertial>
+        <collision name='collision'>
+          <geometry>
+            <box>
+              <size>1 0.999997 1</size>
+            </box>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <box>
+              <size>1 0.999997 1</size>
+            </box>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+    </model>
+    <model name='prisma_trapezoidal'>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <scale>0.2 0.2 0.2</scale>
+              <uri>model://prisma_trapezoidal/meshes/prisma_trapezoidal.stl</uri>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <scale>0.2 0.2 0.2</scale>
+              <uri>model://prisma_trapezoidal/meshes/prisma_trapezoidal.dae</uri>
+            </mesh>
+          </geometry>
+        </visual>
+        <self_collide>0</self_collide>
+        <inertial>
+          <pose>0 0 0 0 -0 0</pose>
+          <inertia>
+            <ixx>1</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1</iyy>
+            <iyz>0</iyz>
+            <izz>1</izz>
+          </inertia>
+          <mass>1</mass>
+        </inertial>
+        <enable_wind>0</enable_wind>
+        <kinematic>0</kinematic>
+      </link>
+      <pose>5.51892 1.00368 0 0 -0 0</pose>
+    </model>
   </world>
 </sdf>
