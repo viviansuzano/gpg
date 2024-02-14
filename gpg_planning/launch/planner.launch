@@ -11,7 +11,7 @@
   <rosparam command="load" file="$(find gpg_planning)/config/planner.yaml" />
 
   <!-- World file -->
-  <arg name="world" default="rampa"/>
+  <arg name="world" default="rampas"/>
   <arg name="world_file" default="$(find gpg_gazebo)/worlds/$(arg world).world"/>
 
   <!-- Robot description arguments -->
