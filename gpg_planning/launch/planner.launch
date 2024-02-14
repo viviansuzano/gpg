@@ -11,7 +11,7 @@
   <rosparam command="load" file="$(find gpg_planning)/config/planner.yaml" />
 
   <!-- World file -->
-  <arg name="world" default="step"/>
+  <arg name="world" default="rampa"/>
   <arg name="world_file" default="$(find gpg_gazebo)/worlds/$(arg world).world"/>
 
   <!-- Robot description arguments -->
@@ -33,7 +33,7 @@
   <arg name="z"                                     default="0.0"/>
   <arg name="roll"                                  default="0.0"/>
   <arg name="pitch"                                 default="0.0"/>
-  <arg name="yaw"                                   default="1.5708"/>
+  <arg name="yaw"                                   default="0.0"/>
 
   <!-- Load Gazebo world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">

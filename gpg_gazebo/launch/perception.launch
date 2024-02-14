@@ -8,7 +8,7 @@
   <arg name="debug" default="false"/>
 
   <!-- World file -->
-  <arg name="world" default="empty"/>
+  <arg name="world" default="cenario_teste"/>
   <arg name="world_file" default="$(find gpg_gazebo)/worlds/$(arg world).world"/>
 
   <!-- Robot description arguments -->

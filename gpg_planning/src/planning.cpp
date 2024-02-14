@@ -34,16 +34,16 @@ Planner::~Planner()
 
 bool Planner::readParameters()
 {
-    node_handle.param("pose_topic", pose_topic, std::string("/ground_truth"));
-    node_handle.param("cmd_topic", cmd_topic, std::string("/gpg_velocity_controller/cmd_vel"));
-    node_handle.param("map_topic", map_topic, std::string("/grid_map_filter/filtered_map"));
-    node_handle.param("base_to_hip_x", base_to_hip_x, 0.1881);
-    node_handle.param("base_to_hip_y", base_to_hip_y, 0.12675);
-    node_handle.param("robot_height", robot_height, 0.4);
-    node_handle.param("t_stance", t_stance, 1.0);
-    node_handle.param("k_velocity", k_velocity, 0.03);
-    node_handle.param("gravity", gravity, 9.81);
-    node_handle.param("threshold_traversability", threshold_traversability, 0.5);
+    node_handle.param("/planner/pose_topic", pose_topic, std::string("/ground_truth"));
+    node_handle.param("/planner/cmd_topic", cmd_topic, std::string("/gpg_velocity_controller/cmd_vel"));
+    node_handle.param("/planner/map_topic", map_topic, std::string("/grid_map_filter/filtered_map"));
+    node_handle.param("/planner/base_to_hip_x", base_to_hip_x, 0.1881);
+    node_handle.param("/planner/base_to_hip_y", base_to_hip_y, 0.12675);
+    node_handle.param("/planner/robot_height", robot_height, 0.4);
+    node_handle.param("/planner/t_stance", t_stance, 1.0);
+    node_handle.param("/planner/k_velocity", k_velocity, 0.03);
+    node_handle.param("/planner/gravity", gravity, 9.81);
+    node_handle.param("/planner/threshold_traversability", threshold_traversability, 0.5);
     return true;
 }
 

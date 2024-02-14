@@ -87,13 +87,13 @@
       <elevation>0</elevation>
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
-    <model name='Construction Cone'>
+    <model name='rampa'>
       <link name='link'>
         <collision name='collision'>
           <geometry>
             <mesh>
-              <scale>10 10 10</scale>
-              <uri>model://construction_cone/meshes/construction_cone.dae</uri>
+              <scale>0.12 0.12 0.12</scale>
+              <uri>model://rampa/meshes/rampa.stl</uri>
             </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
@@ -113,8 +113,8 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <scale>10 10 10</scale>
-              <uri>model://construction_cone/meshes/construction_cone.dae</uri>
+              <scale>0.12 0.12 0.12</scale>
+              <uri>model://rampa/meshes/rampa.dae</uri>
             </mesh>
           </geometry>
         </visual>
@@ -134,59 +134,16 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
-      <pose>-0.030706 5.41185 0 0 -0 0</pose>
+      <pose>3.31312 0.812216 0 0 -0 0</pose>
     </model>
-    <model name='cafe_table'>
-      <static>1</static>
+    <model name='rampa_0'>
       <link name='link'>
-        <collision name='surface'>
-          <pose>0 0 0.755 0 -0 0</pose>
+        <collision name='collision'>
           <geometry>
-            <box>
-              <size>0.913 0.913 0.04</size>
-            </box>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-            <friction>
-              <torsional>
-                <ode/>
-              </torsional>
-              <ode/>
-            </friction>
-          </surface>
-        </collision>
-        <collision name='column'>
-          <pose>0 0 0.37 0 -0 0</pose>
-          <geometry>
-            <box>
-              <size>0.042 0.042 0.74</size>
-            </box>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-            <friction>
-              <torsional>
-                <ode/>
-              </torsional>
-              <ode/>
-            </friction>
-          </surface>
-        </collision>
-        <collision name='base'>
-          <pose>0 0 0.02 0 -0 0</pose>
-          <geometry>
-            <box>
-              <size>0.56 0.56 0.04</size>
-            </box>
+            <mesh>
+              <scale>0.12 0.12 0.12</scale>
+              <uri>model://rampa/meshes/rampa.stl</uri>
+            </mesh>
           </geometry>
           <max_contacts>10</max_contacts>
           <surface>
@@ -205,108 +162,34 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://cafe_table/meshes/cafe_table.dae</uri>
+              <scale>0.12 0.12 0.12</scale>
+              <uri>model://rampa/meshes/rampa.dae</uri>
             </mesh>
           </geometry>
         </visual>
         <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-      <pose>2.55859 2.96754 0 0 -0 0</pose>
-    </model>
-    <model name='coke_can'>
-      <link name='link'>
         <inertial>
-          <pose>0 0 0.06 0 -0 0</pose>
-          <mass>0.39</mass>
+          <pose>0 0 0 0 -0 0</pose>
           <inertia>
-            <ixx>0.00055575</ixx>
+            <ixx>1</ixx>
             <ixy>0</ixy>
             <ixz>0</ixz>
-            <iyy>0.00055575</iyy>
+            <iyy>1</iyy>
             <iyz>0</iyz>
-            <izz>0.0001755</izz>
+            <izz>1</izz>
           </inertia>
+          <mass>1</mass>
         </inertial>
-        <collision name='collision'>
-          <pose>0.003937 0.004724 -0.18 0 -0 0</pose>
-          <geometry>
-            <mesh>
-              <uri>model://coke_can/meshes/coke_can.dae</uri>
-            </mesh>
-          </geometry>
-          <surface>
-            <friction>
-              <ode>
-                <mu>1</mu>
-                <mu2>1</mu2>
-              </ode>
-              <torsional>
-                <ode/>
-              </torsional>
-            </friction>
-            <contact>
-              <ode>
-                <kp>1e+07</kp>
-                <kd>1</kd>
-                <min_depth>0.001</min_depth>
-                <max_vel>0.1</max_vel>
-              </ode>
-            </contact>
-            <bounce/>
-          </surface>
-          <max_contacts>10</max_contacts>
-        </collision>
-        <visual name='visual'>
-          <pose>0.003937 0.004724 -0.18 0 -0 0</pose>
-          <geometry>
-            <mesh>
-              <uri>model://coke_can/meshes/coke_can.dae</uri>
-            </mesh>
-          </geometry>
-        </visual>
-        <self_collide>0</self_collide>
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
-      <pose>1.06753 3.52272 0 0 -0 0</pose>
+      <pose>4.00511 0.980776 0 0 -0 0</pose>
     </model>
     <state world_name='default'>
-      <sim_time>89 56000000</sim_time>
-      <real_time>90 121581087</real_time>
-      <wall_time>1677600928 72256398</wall_time>
-      <iterations>89056</iterations>
-      <model name='Construction Cone'>
-        <pose>4.90199 0.627559 -0 0 -0 0</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose>4.90199 0.627559 -0 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 -0 -0.008512 -2.58585 1.13682 3.14159</acceleration>
-          <wrench>0 -0 -0.008512 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='cafe_table'>
-        <pose>5.31785 -2.00334 0 0 -0 0</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose>5.31785 -2.00334 0 0 -0 0</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>0 0 0 0 -0 0</acceleration>
-          <wrench>0 0 0 0 -0 0</wrench>
-        </link>
-      </model>
-      <model name='coke_can'>
-        <pose>4.61997 -1.03795 -0.002748 -0.060409 0.004074 -0.000539</pose>
-        <scale>1 1 1</scale>
-        <link name='link'>
-          <pose>4.61997 -1.03795 -0.002748 -0.060409 0.004074 -0.000539</pose>
-          <velocity>0 0 0 0 -0 0</velocity>
-          <acceleration>-0.02416 -0.049377 -0.000773 0.860472 -0.423811 -0.03867</acceleration>
-          <wrench>-0.009422 -0.019257 -0.000302 0 -0 0</wrench>
-        </link>
-      </model>
+      <sim_time>241 38000000</sim_time>
+      <real_time>244 740536726</real_time>
+      <wall_time>1707874775 938612151</wall_time>
+      <iterations>241038</iterations>
       <model name='ground_plane'>
         <pose>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -317,13 +200,33 @@
           <wrench>0 0 0 0 -0 0</wrench>
         </link>
       </model>
+      <model name='rampa'>
+        <pose>3.31312 1 -0.060009 1e-06 1e-06 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>3.31312 1 -0.060009 1e-06 1e-06 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 -9.8 0 -0 0</acceleration>
+          <wrench>0 0 -9.8 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='rampa_0'>
+        <pose>3.80031 1.00002 -0.060005 0 -2e-06 3.1415</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose>3.80031 1.00002 -0.060005 0 -2e-06 3.1415</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 -9.8 0 -0 0</acceleration>
+          <wrench>0 0 -9.8 0 -0 0</wrench>
+        </link>
+      </model>
       <light name='sun'>
         <pose>0 0 10 0 -0 0</pose>
       </light>
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>-6.65565 -1.45811 2.9281 0 0.335643 0.408192</pose>
+        <pose>6.71702 0.504867 2.063 0 0.479642 2.82419</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>

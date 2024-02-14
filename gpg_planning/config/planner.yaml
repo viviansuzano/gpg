@@ -6,7 +6,7 @@ planner:
   base_to_hip_y: 0.12675 # 0.04675
   robot_height: 0.4
   t_stance: 1.0
-  k_velocity: 0.03
+  k_velocity: 0.02
   gravity: 9.81
   threshold_traversability: 0.5
   
