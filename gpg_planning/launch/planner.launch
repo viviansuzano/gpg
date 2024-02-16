@@ -28,8 +28,8 @@
   <arg name="load_rviz" default="true" />
 
   <!-- Set the initial pose of the robot's main body -->
-  <arg name="x"                                     default="1.0"/>
-  <arg name="y"                                     default="1.0"/>
+  <arg name="x"                                     default="0.0"/>
+  <arg name="y"                                     default="0.5"/>
   <arg name="z"                                     default="0.0"/>
   <arg name="roll"                                  default="0.0"/>
   <arg name="pitch"                                 default="0.0"/>
@@ -64,14 +64,14 @@
 		<arg name="use_rqt_steering" value="$(arg use_rqt_steering)"/>
 	</include>
 	
-	<!-- Load elevation_mapping -->
+  <!-- Load elevation_mapping -->
 	<include file="$(find gpg_elevation_mapping)/launch/elevation_mapping.launch">
   </include>
 	
-	<!-- Ground truth -->
-	<node name="publish_robot_pose" pkg="gpg_localization" type="publish_robot_pose" output="screen"/>
+  <!-- Ground truth -->
+  <node name="publish_robot_pose" pkg="gpg_localization" type="publish_robot_pose" output="screen"/>
 	
-	<!-- RViz -->
+  <!-- RViz -->
   <group if="$(arg load_rviz)">
     <arg name="rvizconfig" default="$(find gpg_planning)/rviz/planner_config.rviz" />
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" />

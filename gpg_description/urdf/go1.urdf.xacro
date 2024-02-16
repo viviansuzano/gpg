@@ -327,7 +327,7 @@
 	<xacro:if value="$(arg d435)">
 		<xacro:sensor_d435 name="d435" topics_ns="d435" parent="base_link" use_nominal_extrinsics="true" simulation="true">
 		  <!--origin xyz="0.056 0.0 0.06" rpy="0 0 0"/-->
-		  <origin xyz="0.056 0.0 0.4" rpy="0 0 0"/>
+		  <origin xyz="0.056 0.0 0.4" rpy="0 0.3 0"/>
 		</xacro:sensor_d435>
   </xacro:if>
 

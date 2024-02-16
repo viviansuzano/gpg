@@ -16,6 +16,7 @@ track_point_frame_id: world
 track_point_x: 0.0
 track_point_y: 0.0
 track_point_z: 0.0
+min_update_rate: 0.25 # segundos
 
 # Map
 length_in_x: 10.0 # 10.0
