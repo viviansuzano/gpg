@@ -30,8 +30,16 @@ class Planner{
         void cmdCallback(const geometry_msgs::Twist& msg);
         void mapCallback(const grid_map_msgs::GridMap& msg);
 
-        bool updateFootMarkers();
-        bool updateNextFootMarkers();
+        void updateFootMarkers();
+        void updateNextFootMarkers();
+        void updateNearestValidMarkers();
+
+        struct circleIteratorResults {
+            tf::Vector3 newPosNext;
+            bool success = false;
+        };
+
+        circleIteratorResults circleIterator(grid_map::GridMap inputMap, Eigen::Vector2d& center, double& radius);
 
 
     private:
@@ -54,13 +62,18 @@ class Planner{
         double k_velocity;
         double gravity;
         double threshold_traversability;
+        double resolution;
 
-        enum FootIDs {FL=0, FR, RL, RR, nextFL, nextFR, nextRL, nextRR};
+        enum FootIDs {FL=0, FR, RL, RR, nextFL, nextFR, nextRL, nextRR, validFL, validFR, validRL, validRR};
+
+        bool isMapInit = false;
 
         footstep_marker::FootPositionVisualizer footPosVisualizer;
         footstep_marker::FootPositionVisualizer nextFootPosVisualizer;
+        footstep_marker::FootPositionVisualizer nearestValidFootPosVisualizer;
         std::vector<Eigen::Vector3d> footPositions;
         std::vector<Eigen::Vector3d> nextFootPositions;
+        std::vector<Eigen::Vector3d> nearestValidFootPositions;
 
         tf::Transform w_transformFootPos_b;
 
@@ -71,9 +84,11 @@ class Planner{
         tf::Vector3 b_cmdVel_angular;
 
         std::array<tf::Vector3, 4> b_pos;
-        std::array<tf::Vector3, 8> w_pos;
+        std::array<tf::Vector3, 12> w_pos;
 
-        std::array<double, 8> elevation;
+        grid_map::GridMap inputMap;
+
+        std::array<double, 12> elevation;
         std::array<double, 8> traversability;
         std::array<u_int, 4> binary_t;
         std::array<u_int, 4> nextBinary_t;

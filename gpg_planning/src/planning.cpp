@@ -5,7 +5,8 @@ namespace footstep_planning {
 Planner::Planner(ros::NodeHandle& nodeHandle, bool& success)
         : node_handle(nodeHandle),
           footPosVisualizer(nodeHandle, "/foot_positions", 0), // Publisher /foot_positions para gerar markers
-          nextFootPosVisualizer(nodeHandle, "/next_foot_positions", 1) // Publisher /next_foot_positions para gerar markers
+          nextFootPosVisualizer(nodeHandle, "/next_foot_positions", 1), // Publisher /next_foot_positions para gerar markers
+          nearestValidFootPosVisualizer(nodeHandle, "/nearest_valid_foot_positions", 2) // Publisher /nearest_valid_foot_positions para gerar markers
 {
     // Parâmetros de subscriber e publisher
     if (!readParameters())
@@ -44,6 +45,7 @@ bool Planner::readParameters()
     node_handle.param("/planner/k_velocity", k_velocity, 0.03);
     node_handle.param("/planner/gravity", gravity, 9.81);
     node_handle.param("/planner/threshold_traversability", threshold_traversability, 0.5);
+    node_handle.param("/elevation_mapping/resolution", resolution, 0.01);
     return true;
 }
 
@@ -83,6 +85,10 @@ void Planner::poseCallback(const nav_msgs::Odometry::ConstPtr& msg)
 
     // Atualiza próximas posições dos foot markers do robô
     updateNextFootMarkers();
+
+    // Atualiza posições válidas mais próximas dos foot markers das próximas posições
+    if (isMapInit)
+        updateNearestValidMarkers();
 }
 
 
@@ -95,8 +101,9 @@ void Planner::cmdCallback(const geometry_msgs::Twist& msg)
 
 void Planner::mapCallback(const grid_map_msgs::GridMap& msg)
 {
-    grid_map::GridMap inputMap;
+    //grid_map::GridMap inputMap;
     grid_map::GridMapRosConverter::fromMessage(msg, inputMap, {"elevation","traversability"});
+    isMapInit = true;
 
     // Obtém elevação e atravessabilidade das posições atuais e futuras das patas
     for (int i=0; i < elevation.size(); i++)
@@ -126,7 +133,7 @@ void Planner::mapCallback(const grid_map_msgs::GridMap& msg)
 }
 
 
-bool Planner::updateFootMarkers()
+void Planner::updateFootMarkers()
 {
     // Coloca a posição de cada pé em um vector3d para ser publicado pela instância de FootPositionVisualizer
     Eigen::Vector3d posFL(w_pos.at(FL).x(), w_pos.at(FL).y(), elevation.at(FL));
@@ -137,14 +144,12 @@ bool Planner::updateFootMarkers()
     footPositions = {posFL, posFR, posRL, posRR};
 
     footPosVisualizer.updateMarkers(footPositions);
-    footPosVisualizer.changeColor(binary_t, 0);
+    footPosVisualizer.changeColor(binary_t);
     footPosVisualizer.publish();
-
-    return true;
 }
 
 
-bool Planner::updateNextFootMarkers()
+void Planner::updateNextFootMarkers()
 {
     // Calcula próximos passos por meio de Raibert Heuristic
     tf::Vector3 p_symmetry, p_centrifugal;
@@ -167,10 +172,84 @@ bool Planner::updateNextFootMarkers()
     nextFootPositions = {posNextFL, posNextFR, posNextRL, posNextRR};
 
     nextFootPosVisualizer.updateMarkers(nextFootPositions);
-    nextFootPosVisualizer.changeColor(nextBinary_t, 1);
+    nextFootPosVisualizer.changeColor(nextBinary_t);
     nextFootPosVisualizer.publish();
+}
 
-    return true;
+
+void Planner::updateNearestValidMarkers()
+{
+    double radius = 2*resolution;
+    double radius_max = 4*radius;
+    grid_map::Position center;
+    circleIteratorResults results;
+    tf::Transform w_transformNextFootPos_b;
+    tf::Quaternion baseOrientation(0, 0, 0, 1);
+    bool success = false;
+
+    // i: FL, FR, RL, RR
+    // j: nextFL, nextFR, nextRL, nextRR
+    // k: validFL, validFR, validRL, validRR
+    for (int i=0, j=4, k=8; i < nextBinary_t.size(); i++, j++, k++){ 
+        // Verifica se a próxima posição é válida
+        if (nextBinary_t[i] == 1)
+            w_pos.at(k).setValue(0.0, 0.0, 0.0);
+        else{
+            center(w_pos.at(j).x(), w_pos.at(j).y());
+
+            while (!success and radius <= radius_max){
+                results = circleIterator(inputMap, center, radius);
+                tf::Vector3 translationWorldToBaseFootprint(w_pos.at(j).x(), w_pos.at(j).y(), 0);
+                w_transformNextFootPos_b.setOrigin(translationWorldToBaseFootprint);
+                w_transformNextFootPos_b.setRotation(baseOrientation);
+                w_pos.at(k) = w_transformNextFootPos_b * results.newPosNext;
+                success = results.success;
+                radius += radius;
+            }
+
+            // Se não tem nenhuma posição válida na área de busca, seta a posição de origem
+            if (!results.success)
+                w_pos.at(k).setValue(0.0, 0.0, 0.0); 
+        }
+    }
+    
+    Eigen::Vector3d posValidFL(w_pos.at(validFL).x(), w_pos.at(validFL).y(), elevation.at(validFL));
+    Eigen::Vector3d posValidFR(w_pos.at(validFR).x(), w_pos.at(validFR).y(), elevation.at(validFR));
+    Eigen::Vector3d posValidRL(w_pos.at(validRL).x(), w_pos.at(validRL).y(), elevation.at(validRL));
+    Eigen::Vector3d posValidRR(w_pos.at(validRR).x(), w_pos.at(validRR).y(), elevation.at(validRR));
+
+    nearestValidFootPositions = {posValidFL, posValidFR, posValidRL, posValidRR};
+        
+    nearestValidFootPosVisualizer.updateMarkers(nearestValidFootPositions);
+    nearestValidFootPosVisualizer.changeColor(nextBinary_t);
+    nearestValidFootPosVisualizer.publish();
+}
+
+
+
+Planner::circleIteratorResults Planner::circleIterator(grid_map::GridMap inputMap, Eigen::Vector2d& center, double& radius)
+{
+    double traversability_value;
+    Eigen::Vector2d newPosNext_vector2;
+    tf::Vector3 newPosNext;
+    circleIteratorResults results;
+
+    for (grid_map::CircleIterator submapIterator(inputMap, center, radius); !submapIterator.isPastEnd(); ++submapIterator) {
+        if (!inputMap.isValid(*submapIterator, "traversability"))
+            continue;
+    
+        traversability_value = inputMap.at("traversability", *submapIterator);
+
+        if (traversability_value >= threshold_traversability){
+            inputMap.getPosition(*submapIterator, newPosNext_vector2);
+            newPosNext.setValue(newPosNext_vector2.x(), newPosNext_vector2.y(), 0.0);
+            results = {newPosNext, true};
+            return results;
+        }
+    }
+    
+    results = {newPosNext, false};
+    return results;
 }
 
 }
